@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "cri",
+	"version": "${version}",
+	"name": "Cobblemon Raid Den Icons",
+	"description": "Display raid den icons on the map",
+	"authors": [
+		"ludwici"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/cobblemon-raid-den-icons",
+		"sources": "https://github.com/ludwici/CobblemonRaidDenIcons"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/cri/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.ludwici.cri.CobblemonRaidIcons"
+		],
+		"journeymap": [
+			"com.ludwici.cri.plugins.JourneyPlugin"
+		],
+		"client": [
+			"com.ludwici.cri.CobblemonRaidIconsClient"
+		]
+	},
+	"mixins": [
+		"cri.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cobblemon": ">=1.7.3"
+	}
+}
