@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "cri",
 	"version": "${version}",
-	"name": "Cobblemon Raid Den Icons",
+	"name": "Cobblemon Raid Dens Icons",
 	"description": "Display raid den icons on the map",
 	"authors": [
 		"ludwici"

@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class ChunkScanListener {
     public static void register() {
-
         ClientChunkEvents.CHUNK_LOAD.register(((world, chunk) -> {
             for (BlockEntity be : chunk.getBlockEntities().values()) {
                 if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {

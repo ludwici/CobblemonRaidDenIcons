@@ -25,10 +25,6 @@ public class CobblemonRaidIconsClient implements ClientModInitializer {
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(RaidBlockDespawnS2CPayload.ID, ((payload, context) -> {
-            ClientLevel world = context.client().level;
-            if (world == null) {
-                return;
-            }
             RaidBlockMarkerManager.unregisterMarker(payload.pos());
         }));
     }
