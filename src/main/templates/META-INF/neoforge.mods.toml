@@ -8,8 +8,13 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="ludwici"
 description='''
-Display raid den icons on the map
+Display raid dens icons on the map
 '''
+
+logoFile = "icon.png"
+
+[[mixins]]
+config="${mod_id}.mixins.json"
 
 [[dependencies.${mod_id}]]
     modId="neoforge"
@@ -24,3 +29,10 @@ Display raid den icons on the map
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId = "cobblemon"
+    mandatory = true
+    versionRange = "[1.7.3,)"
+    ordering = "AFTER"
+    side = "BOTH"

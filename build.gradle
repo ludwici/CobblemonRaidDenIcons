@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
+    id 'org.jetbrains.kotlin.jvm' version '2.4.0'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -12,6 +13,10 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
+base {
+    archivesName = "${mod_id}-neoforge"
+}
+
 sourceSets.main.resources {
     srcDir('src/generated/resources')
 
@@ -20,10 +25,30 @@ sourceSets.main.resources {
 }
 
 repositories {
-}
-
-base {
-    archivesName = mod_id
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "New JourneyMap Maven"
+        url = 'https://maven.blamejared.com'
+    }
+    maven { url = "https://maven.impactdev.net/repository/development/" }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
+    maven { url "https://maven.shedaniel.me/" }
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+        content { includeGroup "thedarkcolour" }
+    }
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -79,7 +104,12 @@ configurations {
 }
 
 dependencies {
-
+    implementation "thedarkcolour:kotlinforforge-neoforge:$rootProject.kotlin_for_forge_version"
+    implementation "com.cobblemon:neoforge:$rootProject.cobblemon_version"
+    compileOnly "info.journeymap:journeymap-api-neoforge:$project.journeymap_api_version"
+    compileOnlyApi "me.shedaniel.cloth:cloth-config-neoforge:$rootProject.cloth_config_version"
+    implementation "software.bernie.geckolib:geckolib-neoforge-$rootProject.geckolib_version"
+    implementation "curse.maven:cobblemonraiddens-1349231:8358840"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
