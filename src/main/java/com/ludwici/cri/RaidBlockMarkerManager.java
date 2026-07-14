@@ -49,7 +49,7 @@ public class RaidBlockMarkerManager {
         BlockPos pos = blockEntity.getBlockPos();
         String posStr = pos.toShortString();
         if (trackedMarkers.containsKey(posStr)) {
-            return;
+            jmApi.remove(trackedMarkers.get(posStr));
         }
 
         var raidType = holder.raidType();
@@ -62,8 +62,9 @@ public class RaidBlockMarkerManager {
         typeIcon.centerAnchors();
 
         MarkerOverlay marker = new MarkerOverlay(MODID, pos, typeIcon);
-
         marker.setDimension(world.dimension());
+        marker.setTitle(String.format("%s (%s)", boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars()));
+
         try {
             jmApi.show(marker);
             trackedMarkers.put(posStr, marker);
