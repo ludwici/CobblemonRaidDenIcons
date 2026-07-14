@@ -32,7 +32,13 @@ public class CobblemonRaidDenIcons {
             BlockEntity blockEntity = raidDenSpawnEvent.getLevel().getBlockEntity(pos);
             if (blockEntity instanceof RaidCrystalBlockEntity) {
                 var rb = raidDenSpawnEvent.getRaidBoss();
-                RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType());
+                String stars;
+                try {
+                    stars = rb.getTier().getStars();
+                } catch (MatchException e) {
+                    stars = "";
+                }
+                RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
                 RaidBlockSpawnS2CPayload payload = new RaidBlockSpawnS2CPayload(pos, holder);
                 ChunkPos chunkPos = new ChunkPos(pos);
                 PacketDistributor.sendToPlayersTrackingChunk(raidDenSpawnEvent.getLevel(), chunkPos, payload);

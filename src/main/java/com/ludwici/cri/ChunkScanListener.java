@@ -35,11 +35,23 @@ public class ChunkScanListener {
             if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
                 if (level.isClientSide()) {
                     var rb = ClientRaidRegistry.getRaidBoss(raidCrystalBlock.getRaidBossLocation());
-                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType());
+                    String stars;
+                    try {
+                        stars = rb.getTier().getStars();
+                    } catch (MatchException e) {
+                        stars = "";
+                    }
+                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
                     RaidBlockMarkerManager.registerMarker(raidCrystalBlock, (Level) level, holder);
                 } else {
                     var rb = raidCrystalBlock.getRaidBoss();
-                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType());
+                    String stars;
+                    try {
+                        stars = rb.getTier().getStars();
+                    } catch (MatchException e) {
+                        stars = "";
+                    }
+                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
                     RaidBlockSpawnS2CPayload payload = new RaidBlockSpawnS2CPayload(blockPos, holder);
                     ChunkPos chunkPos = new ChunkPos(blockPos);
                     PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, chunkPos, payload);
