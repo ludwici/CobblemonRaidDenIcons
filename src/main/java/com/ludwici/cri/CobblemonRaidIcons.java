@@ -30,7 +30,13 @@ public class CobblemonRaidIcons implements ModInitializer {
 			BlockEntity blockEntity = raidDenSpawnEvent.getLevel().getBlockEntity(raidDenSpawnEvent.getBlockPos());
 			if (blockEntity instanceof RaidCrystalBlockEntity) {
 				var rb = raidDenSpawnEvent.getRaidBoss();
-				RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType());
+				String stars;
+				try {
+					stars = rb.getTier().getStars();
+				} catch (MatchException e) {
+					stars = "";
+				}
+				RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
 				RaidBlockSpawnS2CPayload payload = new RaidBlockSpawnS2CPayload(raidDenSpawnEvent.getBlockPos(), holder);
 				for (ServerPlayer player : PlayerLookup.tracking(blockEntity)) {
 					ServerPlayNetworking.send(player, payload);

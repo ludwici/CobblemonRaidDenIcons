@@ -12,7 +12,13 @@ public class ChunkScanListener {
             for (BlockEntity be : chunk.getBlockEntities().values()) {
                 if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
                     var rb = ClientRaidRegistry.getRaidBoss(raidCrystalBlock.getRaidBossLocation());
-                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType());
+                    String stars;
+                    try {
+                        stars = rb.getTier().getStars();
+                    } catch (MatchException e) {
+                        stars = "";
+                    }
+                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
                     RaidBlockMarkerManager.registerMarker(raidCrystalBlock, world, holder);
                 }
             }
