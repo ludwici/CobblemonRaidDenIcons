@@ -49,6 +49,8 @@ repositories {
         url = 'https://thedarkcolour.github.io/KotlinForForge/'
         content { includeGroup "thedarkcolour" }
     }
+    maven { url 'https://maven.wispforest.io/releases' }
+    maven { url 'https://maven.su5ed.dev/releases' }
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -110,6 +112,10 @@ dependencies {
     compileOnlyApi "me.shedaniel.cloth:cloth-config-neoforge:$rootProject.cloth_config_version"
     implementation "software.bernie.geckolib:geckolib-neoforge-$rootProject.geckolib_version"
     implementation "curse.maven:cobblemonraiddens-1349231:8358840"
+
+    runtimeOnly "io.wispforest:accessories-neoforge:1.1.0-beta.52+1.21.1"
+    runtimeOnly "dev.architectury:architectury-neoforge:13.0.8"
+    implementation "curse.maven:cobblemon-mega-showdown-1189523:8102863"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
