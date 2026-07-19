@@ -1,4 +1,4 @@
-package com.ludwici.cri;
+package com.ludwici.cri.plugins.journey;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.types.ElementalTypes;

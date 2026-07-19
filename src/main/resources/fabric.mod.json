@@ -19,7 +19,7 @@
 			"com.ludwici.cri.CobblemonRaidIcons"
 		],
 		"journeymap": [
-			"com.ludwici.cri.plugins.JourneyPlugin"
+			"com.ludwici.cri.plugins.journey.JourneyPlugin"
 		],
 		"client": [
 			"com.ludwici.cri.CobblemonRaidIconsClient"

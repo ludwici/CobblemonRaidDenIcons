@@ -1,6 +1,5 @@
-package com.ludwici.cri.plugins;
+package com.ludwici.cri.plugins.journey;
 
-import com.ludwici.cri.RaidBlockMarkerManager;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
 import journeymap.api.v2.client.event.MappingEvent;

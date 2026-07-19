@@ -1,9 +1,12 @@
 package com.ludwici.cri;
 
 import com.ludwici.cri.network.RaidBossHolder;
+import com.ludwici.cri.plugins.journey.RaidBlockMarkerManager;
+import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class ChunkScanListener {
@@ -19,14 +22,22 @@ public class ChunkScanListener {
                         stars = "";
                     }
                     RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
-                    RaidBlockMarkerManager.registerMarker(raidCrystalBlock, world, holder);
+                    if (FabricLoader.getInstance().isModLoaded("journeymap")) {
+                        RaidBlockMarkerManager.registerMarker(raidCrystalBlock, world, holder);
+                    } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
+                        XaeroMarkerManager.registerMarker(raidCrystalBlock, holder);
+                    }
                 }
             }
         }));
         ClientChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> {
             for (BlockEntity be : chunk.getBlockEntities().values()) {
                 if (be instanceof RaidCrystalBlockEntity) {
-                    RaidBlockMarkerManager.unregisterMarker(be.getBlockPos());
+                    if (FabricLoader.getInstance().isModLoaded("journeymap")) {
+                        RaidBlockMarkerManager.unregisterMarker(be.getBlockPos());
+                    } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
+                        XaeroMarkerManager.unregisterMarker(be.getBlockPos());
+                    }
                 }
             }
         });

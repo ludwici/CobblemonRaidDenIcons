@@ -2,9 +2,12 @@ package com.ludwici.cri;
 
 import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
+import com.ludwici.cri.plugins.journey.RaidBlockMarkerManager;
+import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.multiplayer.ClientLevel;
 
 public class CobblemonRaidIconsClient implements ClientModInitializer {
@@ -21,11 +24,19 @@ public class CobblemonRaidIconsClient implements ClientModInitializer {
                 return;
             }
             RaidCrystalBlockEntity blockEntity = (RaidCrystalBlockEntity) world.getBlockEntity(payload.pos());
-            RaidBlockMarkerManager.registerMarker(blockEntity, world, payload.holder());
+            if (FabricLoader.getInstance().isModLoaded("journeymap")) {
+                RaidBlockMarkerManager.registerMarker(blockEntity, world, payload.holder());
+            } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
+                XaeroMarkerManager.registerMarker(blockEntity, payload.holder());
+            }
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(RaidBlockDespawnS2CPayload.ID, ((payload, context) -> {
-            RaidBlockMarkerManager.unregisterMarker(payload.pos());
+            if (FabricLoader.getInstance().isModLoaded("journeymap")) {
+                RaidBlockMarkerManager.unregisterMarker(payload.pos());
+            } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
+                XaeroMarkerManager.unregisterMarker(payload.pos());
+            }
         }));
     }
 }
