@@ -1,6 +1,6 @@
 package com.ludwici.cri.network;
 
-import com.ludwici.cri.RaidBlockMarkerManager;
+import com.ludwici.cri.plugins.JourneyMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,12 +22,12 @@ public class Payloads {
                 Level world = context.player().level();
 
                 RaidCrystalBlockEntity blockEntity = (RaidCrystalBlockEntity) world.getBlockEntity(payload.pos());
-                RaidBlockMarkerManager.registerMarker(blockEntity, world, payload.holder());
+                JourneyMarkerManager.registerMarker(blockEntity, world, payload.holder());
             });
         });
 
         registrar.playToClient(RaidBlockDespawnS2CPayload.ID, RaidBlockDespawnS2CPayload.CODEC, (payload, context) -> {
-            context.enqueueWork(() -> RaidBlockMarkerManager.unregisterMarker(payload.pos()));
+            context.enqueueWork(() -> JourneyMarkerManager.unregisterMarker(payload.pos()));
         });
     }
 }

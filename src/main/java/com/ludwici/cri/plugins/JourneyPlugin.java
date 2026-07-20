@@ -1,6 +1,5 @@
 package com.ludwici.cri.plugins;
 
-import com.ludwici.cri.RaidBlockMarkerManager;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
 import journeymap.api.v2.client.event.MappingEvent;
@@ -17,7 +16,7 @@ public class JourneyPlugin implements IClientPlugin {
     @Override
     public void initialize(IClientAPI jmClientApi) {
         jmApi = jmClientApi;
-        RaidBlockMarkerManager.init(jmApi);
+        JourneyMarkerManager.init(jmApi);
         ClientEventRegistry.MAPPING_EVENT.subscribe(MODID, this::onMappingEvent);
     }
 

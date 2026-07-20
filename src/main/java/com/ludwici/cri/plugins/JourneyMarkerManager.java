@@ -1,4 +1,4 @@
-package com.ludwici.cri;
+package com.ludwici.cri.plugins;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 import static com.ludwici.cri.CobblemonRaidDenIcons.MODID;
 
-public class RaidBlockMarkerManager {
+public class JourneyMarkerManager {
     private static IClientAPI jmApi;
     private static final Map<String, MarkerOverlay> trackedMarkers = new HashMap<>();
 

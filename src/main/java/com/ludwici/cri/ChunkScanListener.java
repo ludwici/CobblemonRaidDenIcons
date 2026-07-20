@@ -3,6 +3,7 @@ package com.ludwici.cri;
 import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidBossHolder;
+import com.ludwici.cri.plugins.JourneyMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,7 @@ public class ChunkScanListener {
                         stars = "";
                     }
                     RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
-                    RaidBlockMarkerManager.registerMarker(raidCrystalBlock, (Level) level, holder);
+                    JourneyMarkerManager.registerMarker(raidCrystalBlock, (Level) level, holder);
                 } else {
                     var rb = raidCrystalBlock.getRaidBoss();
                     String stars;
@@ -70,7 +71,7 @@ public class ChunkScanListener {
             BlockEntity be = chunkAccess.getBlockEntity(blockPos);
             if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
                 if (level.isClientSide()) {
-                    RaidBlockMarkerManager.unregisterMarker(be.getBlockPos());
+                    JourneyMarkerManager.unregisterMarker(be.getBlockPos());
                 } else {
                     RaidBlockDespawnS2CPayload payload = new RaidBlockDespawnS2CPayload(blockPos);
                     ChunkPos chunkPos = new ChunkPos(blockPos);
