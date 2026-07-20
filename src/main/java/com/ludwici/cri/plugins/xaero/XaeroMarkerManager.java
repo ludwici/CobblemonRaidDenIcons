@@ -4,10 +4,15 @@ import com.ludwici.cri.mixin.xaero.SupportXaeroMinimapAccessor;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import xaero.common.minimap.waypoints.Waypoint;
-import xaero.common.minimap.waypoints.WaypointSet;
 import xaero.hud.minimap.waypoint.WaypointColor;
+import xaero.map.WorldMapSession;
+import xaero.map.core.XaeroWorldMapCore;
+import xaero.map.gui.GuiMap;
 import xaero.map.mods.SupportMods;
 
 import java.util.HashMap;
@@ -43,31 +48,47 @@ public class XaeroMarkerManager {
 
         trackedMarkers.put(posStr, holder);
 
-//        WorldMapSession currentSession = XaeroWorldMapCore.currentSession;
-
-//        GuiMap guiMap = new GuiMap(null, null, currentSession.getMapProcessor(), Minecraft.getInstance().player);
-//        ResourceKey<Level> dimension = Minecraft.getInstance().level.dimension();
-//        SupportMods.xa
         Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), "Boss", "S", WaypointColor.AQUA);
 
-//        Waypoint waypoint = new Waypoint(pos, false, "Boss", 200);
         SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
         if (minimap.waypointWorld() == null) {
-            LOGGER.error("waypointWorld is null");
-            return;
+            initWaypoints();
         }
-        if (!minimap.waypointWorld().getSets().containsKey("gui.xaero_default")) {
-            minimap.waypointWorld().addSet("gui.xaero_default");
-        }
+//        if (minimap.waypointWorld().getWaypointSet("gui.xaero_default").isEmpty()) {
+//            minimap.waypointWorld().addWaypointSet("gui.xaero_default");
+//        }
 
-        WaypointSet waypointSet = minimap.waypointWorld().getSets().get("gui.xaero_default");
+        var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
         waypointSet.add(waypoint);
+    }
+
+    private static void initWaypoints() {
+        Minecraft minecraft = Minecraft.getInstance();
+        ResourceKey<Level> dimension = Minecraft.getInstance().level.dimension();
+        WorldMapSession currentSession = XaeroWorldMapCore.currentSession;
+        GuiMap guiMap = new GuiMap(null, null, currentSession.getMapProcessor(), Minecraft.getInstance().player);
+        SupportMods.xaeroMinimap.checkWaypoints(minecraft.allowsMultiplayer(), dimension, "", 1, 1, guiMap, guiMap.getMapProcessor().getMapWorld(), guiMap.getMapProcessor().getWorldDimensionTypeRegistry());
     }
 
     public static void unregisterMarker(BlockPos pos) {
         String posStr = pos.toShortString();
         try {
             var marker = trackedMarkers.remove(posStr);
+            SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
+            if (minimap.waypointWorld() == null) {
+                initWaypoints();
+            }
+            var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
+            var set = waypointSet.getWaypoints();
+            int slot = 0;
+            for (var w : set) {
+                var tmpPos = new BlockPos(w.getX(), w.getY(), w.getZ());
+                if (pos.equals(tmpPos)) {
+                    break;
+                }
+                slot++;
+            }
+            waypointSet.remove(slot);
         } catch (Exception e) {
             LOGGER.error("Can't remove marker overlay", e);
         }

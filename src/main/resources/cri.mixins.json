@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "xaero.SupportXaeroMinimapAccessor",
+    "xaero.WaypointMapRendererMixin",
     "xaero.WaypointRendererMixin",
     "xaero.WaypointWorldRendererMixin"
   ],

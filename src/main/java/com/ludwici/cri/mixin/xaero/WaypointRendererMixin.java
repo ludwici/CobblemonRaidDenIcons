@@ -66,7 +66,6 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
             Font fontRenderer = Minecraft.getInstance().font;
             int len = fontRenderer.width(name);
 
-//            matrixStack.translate(0.0F, 5, 0.0F);
             matrixStack.scale(1.5F, 1.5F, 1.0F);
             int bgLen = len + 4;
             int color = WaypointColor.BLACK.getHex();
