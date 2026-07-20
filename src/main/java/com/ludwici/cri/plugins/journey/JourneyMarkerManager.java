@@ -20,7 +20,7 @@ import java.util.Map;
 import static com.ludwici.cri.CobblemonRaidIcons.LOGGER;
 import static com.ludwici.cri.CobblemonRaidIcons.MODID;
 
-public class RaidBlockMarkerManager {
+public class JourneyMarkerManager {
     private static IClientAPI jmApi;
     private static final Map<String, MarkerOverlay> trackedMarkers = new HashMap<>();
 

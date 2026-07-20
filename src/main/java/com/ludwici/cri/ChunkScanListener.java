@@ -1,7 +1,7 @@
 package com.ludwici.cri;
 
 import com.ludwici.cri.network.RaidBossHolder;
-import com.ludwici.cri.plugins.journey.RaidBlockMarkerManager;
+import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
@@ -23,7 +23,7 @@ public class ChunkScanListener {
                     }
                     RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
                     if (FabricLoader.getInstance().isModLoaded("journeymap")) {
-                        RaidBlockMarkerManager.registerMarker(raidCrystalBlock, world, holder);
+                        JourneyMarkerManager.registerMarker(raidCrystalBlock, world, holder);
                     } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
                         XaeroMarkerManager.registerMarker(raidCrystalBlock, holder);
                     }
@@ -34,7 +34,7 @@ public class ChunkScanListener {
             for (BlockEntity be : chunk.getBlockEntities().values()) {
                 if (be instanceof RaidCrystalBlockEntity) {
                     if (FabricLoader.getInstance().isModLoaded("journeymap")) {
-                        RaidBlockMarkerManager.unregisterMarker(be.getBlockPos());
+                        JourneyMarkerManager.unregisterMarker(be.getBlockPos());
                     } else if (FabricLoader.getInstance().isModLoaded("xaeroworldmap")) {
                         XaeroMarkerManager.unregisterMarker(be.getBlockPos());
                     }
