@@ -4,6 +4,7 @@ import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
+import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -43,7 +45,11 @@ public class ChunkScanListener {
                         stars = "";
                     }
                     RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
-                    JourneyMarkerManager.registerMarker(raidCrystalBlock, (Level) level, holder);
+                    if (ModList.get().isLoaded("journeymap")) {
+                        JourneyMarkerManager.registerMarker(raidCrystalBlock, (Level) level, holder);
+                    } else if (ModList.get().isLoaded("xaeroworldmap")) {
+                        XaeroMarkerManager.registerMarker(raidCrystalBlock, holder);
+                    }
                 } else {
                     var rb = raidCrystalBlock.getRaidBoss();
                     String stars;
@@ -71,7 +77,11 @@ public class ChunkScanListener {
             BlockEntity be = chunkAccess.getBlockEntity(blockPos);
             if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
                 if (level.isClientSide()) {
-                    JourneyMarkerManager.unregisterMarker(be.getBlockPos());
+                    if (ModList.get().isLoaded("journeymap")) {
+                        JourneyMarkerManager.unregisterMarker(blockPos);
+                    } else if (ModList.get().isLoaded("xaeroworldmap")) {
+                        XaeroMarkerManager.unregisterMarker(blockPos);
+                    }
                 } else {
                     RaidBlockDespawnS2CPayload payload = new RaidBlockDespawnS2CPayload(blockPos);
                     ChunkPos chunkPos = new ChunkPos(blockPos);
