@@ -5,6 +5,8 @@ import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.necro.raid.dens.common.data.raid.RaidType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xaero.common.minimap.waypoints.Waypoint;
 import xaero.hud.minimap.element.render.MinimapElementRenderInfo;
 import xaero.hud.minimap.waypoint.render.WaypointMapRenderer;
+
+import static com.ludwici.cri.CobblemonRaidIcons.LOGGER;
 
 @Mixin(WaypointMapRenderer.class)
 public class WaypointMapRendererMixin {
@@ -33,17 +37,34 @@ public class WaypointMapRendererMixin {
             return;
         }
 
-        ResourceLocation image = ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID,"textures/gui/types.png");
+        ResourceLocation image;
         int diameter = 36;
-        var element = ElementalTypes.get(holder.raidType().name());
-        int offset = element.getTextureXMultiplier();
+        var raidType = holder.raidType();
         int posOffset = diameter / 2;
-
+        int u;
+        int imgW, imgH;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        if (raidType != RaidType.STELLAR) {
+            image = ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID,"textures/gui/types.png");
+            var element = ElementalTypes.get(raidType.name());
+            int offset = element.getTextureXMultiplier();
+            u = diameter*offset;
+            imgW = 648;
+            imgH = diameter;
+
+        } else if (FabricLoader.getInstance().isModLoaded("mega_showdown")) {
+            image = ResourceLocation.parse(String.format("mega_showdown:textures/gui/summary/tera_types/%s.png", raidType.getSerializedName()));
+            u = 0;
+            imgW = 32;
+            imgH = 32;
+        } else {
+            LOGGER.error("Invalid element: {}", raidType.name());
+            return;
+        }
         RenderSystem.setShaderTexture(0, image);
         RenderSystem.enableBlend();
-        guiGraphics.blit(image, -posOffset, -posOffset, diameter*offset, 0, diameter, diameter, 648, diameter);
+        guiGraphics.blit(image, -posOffset, -posOffset, u, 0, diameter, diameter, imgW, imgH);
         RenderSystem.disableBlend();
         cir.cancel();
     }
