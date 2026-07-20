@@ -1,6 +1,6 @@
 package com.ludwici.cri.network;
 
-import com.ludwici.cri.plugins.JourneyMarkerManager;
+import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;

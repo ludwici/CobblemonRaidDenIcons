@@ -1,4 +1,4 @@
-package com.ludwici.cri.plugins;
+package com.ludwici.cri.plugins.journey;
 
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
