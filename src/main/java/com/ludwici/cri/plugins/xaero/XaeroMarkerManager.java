@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import xaero.common.minimap.waypoints.Waypoint;
 import xaero.hud.minimap.waypoint.WaypointColor;
+import xaero.map.MapProcessor;
 import xaero.map.WorldMapSession;
 import xaero.map.core.XaeroWorldMapCore;
 import xaero.map.gui.GuiMap;
@@ -49,7 +50,7 @@ public class XaeroMarkerManager {
 
         trackedMarkers.put(posStr, holder);
 
-        Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), "Boss", "S", WaypointColor.AQUA);
+        Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), boss.getDisplaySpecies().getTranslatedName().getString(), "S", WaypointColor.AQUA);
 
         SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
         if (minimap.waypointWorld() == null) {
@@ -59,16 +60,24 @@ public class XaeroMarkerManager {
 //            minimap.waypointWorld().addWaypointSet("gui.xaero_default");
 //        }
 
-        var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
-        waypointSet.add(waypoint);
+        var wWorld = minimap.waypointWorld();
+        if (wWorld == null) {
+            return;
+        }
+
+        wWorld.getCurrentWaypointSet().add(waypoint);
+
+//        var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
+//        waypointSet.add(waypoint);
     }
 
     private static void initWaypoints() {
         Minecraft minecraft = Minecraft.getInstance();
         ResourceKey<Level> dimension = Minecraft.getInstance().level.dimension();
         WorldMapSession currentSession = XaeroWorldMapCore.currentSession;
-        GuiMap guiMap = new GuiMap(null, null, currentSession.getMapProcessor(), Minecraft.getInstance().player);
-        SupportMods.xaeroMinimap.checkWaypoints(minecraft.allowsMultiplayer(), dimension, "", 1, 1, guiMap, guiMap.getMapProcessor().getMapWorld(), guiMap.getMapProcessor().getWorldDimensionTypeRegistry());
+        MapProcessor mapProcessor = currentSession.getMapProcessor();
+        GuiMap guiMap = new GuiMap(null, null, mapProcessor, minecraft.player);
+        SupportMods.xaeroMinimap.checkWaypoints(mapProcessor.getMapWorld().isMultiplayer(), dimension, "", guiMap.width, guiMap.height, guiMap, mapProcessor.getMapWorld(), mapProcessor.getWorldDimensionTypeRegistry());
     }
 
     public static void unregisterMarker(BlockPos pos) {
