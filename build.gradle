@@ -115,7 +115,7 @@ dependencies {
     compileOnly "info.journeymap:journeymap-api-neoforge:$project.journeymap_api_version"
     compileOnlyApi "me.shedaniel.cloth:cloth-config-neoforge:$rootProject.cloth_config_version"
     implementation "software.bernie.geckolib:geckolib-neoforge-$rootProject.geckolib_version"
-    implementation "curse.maven:cobblemonraiddens-1349231:8358840"
+    implementation "curse.maven:cobblemonraiddens-1349231:8479432"
 
     runtimeOnly "io.wispforest:accessories-neoforge:1.1.0-beta.52+1.21.1"
     runtimeOnly "dev.architectury:architectury-neoforge:13.0.8"
