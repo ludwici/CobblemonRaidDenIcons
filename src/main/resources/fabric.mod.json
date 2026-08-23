@@ -23,6 +23,9 @@
 		],
 		"client": [
 			"com.ludwici.cri.CobblemonRaidIconsClient"
+		],
+		"modmenu": [
+			"com.ludwici.cri.config.ModMenuCompat"
 		]
 	},
 	"mixins": [
