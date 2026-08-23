@@ -1,5 +1,6 @@
 package com.ludwici.cri;
 
+import com.ludwici.cri.config.Config;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -7,6 +8,7 @@ import com.necro.raid.dens.common.events.RaidEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.slf4j.Logger;
 
@@ -25,6 +27,9 @@ public class CobblemonRaidDenIcons {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CobblemonRaidDenIcons(IEventBus modEventBus, ModContainer modContainer) {
+        ModCompat.init();
+        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+
         NeoForge.EVENT_BUS.register(this);
 
         RaidEvents.RAID_DEN_SPAWN.subscribe(raidDenSpawnEvent -> {
@@ -44,8 +49,6 @@ public class CobblemonRaidDenIcons {
                 PacketDistributor.sendToPlayersTrackingChunk(raidDenSpawnEvent.getLevel(), chunkPos, payload);
             }
         });
-
-//        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     @SubscribeEvent

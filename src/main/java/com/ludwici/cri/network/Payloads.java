@@ -1,11 +1,11 @@
 package com.ludwici.cri.network;
 
+import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -24,9 +24,9 @@ public class Payloads {
                 Level world = context.player().level();
 
                 RaidCrystalBlockEntity blockEntity = (RaidCrystalBlockEntity) world.getBlockEntity(payload.pos());
-                if (ModList.get().isLoaded("journeymap")) {
+                if (ModCompat.JOURNEYMAP_LOADED) {
                     JourneyMarkerManager.registerMarker(blockEntity, world, payload.holder());
-                } else if (ModList.get().isLoaded("xaeroworldmap")) {
+                } else if (ModCompat.XAERO_WORLD_MAP_LOADED) {
                     XaeroMarkerManager.registerMarker(blockEntity, payload.holder());
                 }
             });
@@ -34,9 +34,9 @@ public class Payloads {
 
         registrar.playToClient(RaidBlockDespawnS2CPayload.ID, RaidBlockDespawnS2CPayload.CODEC, (payload, context) -> {
             context.enqueueWork(() -> {
-                if (ModList.get().isLoaded("journeymap")) {
+                if (ModCompat.JOURNEYMAP_LOADED) {
                     JourneyMarkerManager.unregisterMarker(payload.pos());
-                }else if (ModList.get().isLoaded("xaeroworldmap")) {
+                }else if (ModCompat.XAERO_WORLD_MAP_LOADED) {
                     XaeroMarkerManager.unregisterMarker(payload.pos());
                 }
             });
