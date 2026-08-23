@@ -42,7 +42,6 @@ public class WaypointMapRendererMixin {
         }
 
         ResourceLocation image;
-//        int diameter = 36;
         int displaySize = ModConfig.get().iconSize;
         var raidType = holder.raidType();
         int posOffset = displaySize / 2;
