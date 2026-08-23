@@ -94,7 +94,7 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
         }
         RenderSystem.setShaderTexture(0, image);
         RenderSystem.enableBlend();
-        guiGraphics.blit(image, -posOffset, -posOffset, (float) u, 0.0F, sourceWidth, sourceHeight, textureWidth, textureHeight);
+        guiGraphics.blit(image, -posOffset, -posOffset, displaySize, displaySize, (float) u, 0.0F, sourceWidth, sourceHeight, textureWidth, textureHeight);
         RenderSystem.disableBlend();
 
         if (hovered) {
