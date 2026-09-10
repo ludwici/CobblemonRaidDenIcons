@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.ludwici.cri.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "xaero.GuiRightClickMenuMixin",
+    "xaero.SupportXaeroMinimapAccessor",
+    "xaero.WaypointMapRendererMixin",
+    "xaero.WaypointRendererMixin",
+    "xaero.WaypointWorldRendererMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

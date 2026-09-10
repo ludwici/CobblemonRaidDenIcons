@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "cri",
+  "version": "${version}",
+  "name": "Cobblemon Raid Dens Icons",
+  "description": "Display Cobblemon Raid Dens icons on JourneyMap and Xaero maps.",
+  "authors": ["ludwici"],
+  "license": "LGPL-3.0-or-later",
+  "icon": "assets/cri/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.ludwici.cri.fabric.CobblemonRaidDenIconsFabric"],
+    "client": ["com.ludwici.cri.fabric.CobblemonRaidDenIconsFabricClient"],
+    "journeymap": ["com.ludwici.cri.plugins.journey.JourneyPlugin"],
+    "modmenu": ["com.ludwici.cri.fabric.config.ModMenuCompat"]
+  },
+  "mixins": ["cri.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "fabric-api": "*",
+    "fabric-language-kotlin": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "architectury": ">=13.0.8",
+    "cobblemon": ">=1.7.3",
+    "cobblemonraiddens": "*"
+  },
+  "suggests": {
+    "journeymap": "*",
+    "xaeroworldmap": "*",
+    "xaerominimap": "*",
+    "mega_showdown": "*"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "package": "com.ludwici.cri.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "mixins": ["LevelMixin"],
+  "injectors": { "defaultRequire": 1 }
+}
