@@ -6,7 +6,9 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name = "cri")
+import static com.ludwici.cri.CobblemonRaidDenIcons.MODID;
+
+@Config(name = MODID)
 public final class ModConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = ConfigConstants.MIN_ICON_SIZE, max = ConfigConstants.MAX_ICON_SIZE)
     public int iconSize = ConfigConstants.DEFAULT_ICON_SIZE;

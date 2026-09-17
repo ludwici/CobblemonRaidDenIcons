@@ -22,9 +22,7 @@ public final class NeoPayloads {
             });
         });
         registrar.playToClient(RaidBlockDespawnS2CPayload.ID, RaidBlockDespawnS2CPayload.CODEC, (payload, context) -> {
-            context.enqueueWork(() -> {
-                MarkerDispatcher.unregister(payload.pos());
-            });
+            context.enqueueWork(() -> MarkerDispatcher.unregister(payload.pos()));
         });
     }
 }

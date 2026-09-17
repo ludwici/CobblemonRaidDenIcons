@@ -11,11 +11,12 @@ public final class NeoConfig {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         ICON_SIZE = builder.comment("Raid icon size for Xaero's map/minimap")
                 .translation("text.autoconfig.cri.option.iconSize")
-                .defineInRange("iconSize", ConfigConstants.DEFAULT_ICON_SIZE,
-                        ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_ICON_SIZE);
+                .defineInRange("iconSize", ConfigConstants.DEFAULT_ICON_SIZE, ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_ICON_SIZE);
         SPEC = builder.build();
     }
 
     private NeoConfig() {}
-    public static int iconSize() { return ICON_SIZE.get(); }
+    public static int iconSize() {
+        return ICON_SIZE.get();
+    }
 }

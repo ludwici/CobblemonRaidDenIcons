@@ -27,19 +27,14 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
     }
 
     private static void registerConfig() {
-        AutoConfig.register(
-                ModConfig.class,
-                GsonConfigSerializer::new
-        );
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         CriConfig.setIconSizeSupplier(() -> ModConfig.get().iconSize);
-        AutoConfig
-                .getConfigHolder(ModConfig.class)
-                .registerSaveListener((holder, config) -> {
-                    if (ModCompat.JOURNEYMAP_LOADED) {
-                        JourneyMarkerManager.refreshIconSize(config.iconSize);
-                    }
-                    return InteractionResult.PASS;
-                });
+        AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((holder, config) -> {
+            if (ModCompat.JOURNEYMAP_LOADED) {
+                JourneyMarkerManager.refreshIconSize(config.iconSize);
+            }
+            return InteractionResult.PASS;
+        });
     }
 
     public static void registerClientNetwork() {

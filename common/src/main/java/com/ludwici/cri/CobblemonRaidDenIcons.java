@@ -16,10 +16,7 @@ public final class CobblemonRaidDenIcons {
 
     private CobblemonRaidDenIcons() {}
 
-    public static synchronized void init() {
-        if (initialized) return;
-        initialized = true;
-
+    public static void init() {
         RaidEvents.RAID_DEN_SPAWN.subscribe(event -> {
             BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getBlockPos());
             if (!(blockEntity instanceof RaidCrystalBlockEntity)) return;

@@ -18,16 +18,12 @@ import xaero.hud.minimap.waypoint.render.world.WaypointWorldRenderer;
 
 @Mixin(WaypointWorldRenderer.class)
 public abstract class WaypointWorldRendererMixin extends MinimapElementRenderer<Waypoint, WaypointWorldRenderContext> {
-    public WaypointWorldRendererMixin(MinimapElementReader<Waypoint, WaypointWorldRenderContext> reader,
-                                      MinimapElementRenderProvider<Waypoint, WaypointWorldRenderContext> provider,
-                                      WaypointWorldRenderContext context) {
+    public WaypointWorldRendererMixin(MinimapElementReader<Waypoint, WaypointWorldRenderContext> reader, MinimapElementRenderProvider<Waypoint, WaypointWorldRenderContext> provider, WaypointWorldRenderContext context) {
         super(reader, provider, context);
     }
 
     @Inject(method = "renderElement(Lxaero/common/minimap/waypoints/Waypoint;ZZDFDDLxaero/hud/minimap/element/render/MinimapElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)Z", cancellable = true, at = @At("HEAD"))
-    private void cri$render(Waypoint w, boolean highlighted, boolean outOfBounds, double optionalDepth, float optionalScale,
-                            double partialX, double partialY, MinimapElementRenderInfo renderInfo, GuiGraphics guiGraphics,
-                            MultiBufferSource.BufferSource vanillaBufferSource, CallbackInfoReturnable<Boolean> cir) {
+    private void cri$render(Waypoint w, boolean highlighted, boolean outOfBounds, double optionalDepth, float optionalScale, double partialX, double partialY, MinimapElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, CallbackInfoReturnable<Boolean> cir) {
         if (XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString()) != null) {
             cir.setReturnValue(false);
         }

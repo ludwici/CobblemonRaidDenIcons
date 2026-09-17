@@ -15,15 +15,7 @@ public final class ModCompat {
         MEGA_SHOWDOWN_LOADED = Platform.isModLoaded("mega_showdown");
     }
 
-    private ModCompat() {
-    }
+    private ModCompat() {}
 
-    public static void init() {
-        LOGGER.info(
-                "Mod compatibility: JourneyMap={}, XaeroWorldMap={}, MegaShowdown={}",
-                JOURNEYMAP_LOADED,
-                XAERO_WORLD_MAP_LOADED,
-                MEGA_SHOWDOWN_LOADED
-        );
-    }
+    public static void init() {}
 }

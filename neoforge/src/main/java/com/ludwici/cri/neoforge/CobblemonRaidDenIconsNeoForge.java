@@ -13,11 +13,13 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import static net.neoforged.fml.config.ModConfig.Type.CLIENT;
+
 @Mod(CobblemonRaidDenIcons.MODID)
 public final class CobblemonRaidDenIconsNeoForge {
     public CobblemonRaidDenIconsNeoForge(IEventBus modBus, ModContainer container) {
         ModCompat.init();
-        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, NeoConfig.SPEC);
+        container.registerConfig(CLIENT, NeoConfig.SPEC);
         CriConfig.setIconSizeSupplier(NeoConfig::iconSize);
         modBus.addListener(NeoPayloads::register);
 

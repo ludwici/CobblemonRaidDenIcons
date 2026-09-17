@@ -41,15 +41,12 @@ import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint, WaypointRenderContext, WaypointRenderer> {
     @Unique private static final int TYPE_TEXTURE_SIZE = 36;
 
-    protected WaypointRendererMixin(WaypointRenderContext context, MapElementRenderProvider<Waypoint, WaypointRenderContext> provider,
-                                    MapElementReader<Waypoint, WaypointRenderContext, WaypointRenderer> reader) {
+    protected WaypointRendererMixin(WaypointRenderContext context, MapElementRenderProvider<Waypoint, WaypointRenderContext> provider, MapElementReader<Waypoint, WaypointRenderContext, WaypointRenderer> reader) {
         super(context, provider, reader);
     }
 
     @Inject(method = "renderElement(Lxaero/map/mods/gui/Waypoint;ZDFDDLxaero/map/element/render/ElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRendererProvider;)Z", at = @At("HEAD"), remap = false, cancellable = true)
-    private void cri$render(Waypoint w, boolean hovered, double optionalDepth, float optionalScale, double partialX, double partialY,
-                            ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource,
-                            MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfoReturnable<Boolean> cir) {
+    private void cri$render(Waypoint w, boolean hovered, double optionalDepth, float optionalScale, double partialX, double partialY, ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfoReturnable<Boolean> cir) {
         RaidBossHolder holder = XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString());
         if (holder == null) return;
 
@@ -76,8 +73,7 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
 
         RenderSystem.setShaderTexture(0, image);
         RenderSystem.enableBlend();
-        guiGraphics.blit(image, -posOffset, -posOffset, displaySize, displaySize, (float) u, 0F,
-                sourceWidth, sourceHeight, textureWidth, textureHeight);
+        guiGraphics.blit(image, -posOffset, -posOffset, displaySize, displaySize, (float) u, 0F, sourceWidth, sourceHeight, textureWidth, textureHeight);
         RenderSystem.disableBlend();
 
         if (hovered) {
@@ -92,8 +88,7 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
             float red = (float)(color >> 16 & 255) / 255F;
             float green = (float)(color >> 8 & 255) / 255F;
             float blue = (float)(color & 255) / 255F;
-            MapRenderHelper.fillIntoExistingBuffer(matrixStack.last().pose(), this.context.textBGConsumer,
-                    -bgLen / 2, -1, bgLen / 2, 11, red, green, blue, 1);
+            MapRenderHelper.fillIntoExistingBuffer(matrixStack.last().pose(), this.context.textBGConsumer, -bgLen / 2, -1, bgLen / 2, 11, red, green, blue, 1);
             matrixStack.translate(0F, 0F, 1F);
             Misc.drawNormalText(matrixStack, name, (float)(-len) / 2F, 1F, 16777215, false, vanillaBufferSource);
         }
@@ -101,9 +96,9 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
     }
 
     @Inject(method = "renderElementShadow(Lxaero/map/mods/gui/Waypoint;ZFDDLxaero/map/element/render/ElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRendererProvider;)V", at = @At("HEAD"), cancellable = true)
-    private void cri$hideShadow(Waypoint w, boolean hovered, float optionalScale, double partialX, double partialY,
-                                ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource,
-                                MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfo ci) {
-        if (XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString()) != null) ci.cancel();
+    private void cri$hideShadow(Waypoint w, boolean hovered, float optionalScale, double partialX, double partialY, ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfo ci) {
+        if (XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString()) != null) {
+            ci.cancel();
+        }
     }
 }

@@ -108,14 +108,10 @@ public class JourneyMarkerManager {
                     .setDisplayWidth(displaySize)
                     .setDisplayHeight(displaySize)
                     .centerAnchors();
-
             try {
                 jmApi.show(marker);
             } catch (Exception e) {
-                LOGGER.error(
-                        "Can't refresh marker overlay icon size",
-                        e
-                );
+                LOGGER.error("Can't refresh marker overlay icon size", e);
             }
         }
     }

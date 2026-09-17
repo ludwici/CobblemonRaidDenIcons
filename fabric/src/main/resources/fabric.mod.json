@@ -5,7 +5,7 @@
   "name": "Cobblemon Raid Dens Icons",
   "description": "Display Cobblemon Raid Dens icons on JourneyMap and Xaero maps.",
   "authors": ["ludwici"],
-  "license": "LGPL-3.0-or-later",
+  "license": "LGPL v3",
   "icon": "assets/cri/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -22,13 +22,7 @@
     "minecraft": "~1.21.1",
     "java": ">=21",
     "architectury": ">=13.0.8",
-    "cobblemon": ">=1.7.3",
-    "cobblemonraiddens": "*"
-  },
-  "suggests": {
-    "journeymap": "*",
-    "xaeroworldmap": "*",
-    "xaerominimap": "*",
-    "mega_showdown": "*"
+    "cobblemon": ">=1.8.0",
+    "cobblemonraiddens": ">=0.12.0"
   }
 }
