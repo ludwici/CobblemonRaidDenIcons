@@ -17,7 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 import static com.ludwici.cri.CobblemonRaidDenIcons.MODID;
@@ -25,6 +27,7 @@ import static com.ludwici.cri.CobblemonRaidDenIcons.MODID;
 public class JourneyMarkerManager {
     private static IClientAPI jmApi;
     private static final Map<String, MarkerOverlay> trackedMarkers = new HashMap<>();
+    private static final Set<String> teraMarkers = new HashSet<>();
     private static final int TYPE_TEXTURE_SIZE = 36;
 
     public static void init(IClientAPI api) {
@@ -59,17 +62,19 @@ public class JourneyMarkerManager {
         var raidType = holder.raidType();
 
         MapImage typeIcon;
-        if (raidType != RaidType.STELLAR) {
+        boolean teraRaid = "tera".equalsIgnoreCase(boss.getFeature());
+        boolean teraIcon = (teraRaid || raidType == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
+        if (teraIcon) {
+            typeIcon = new MapImage(ResourceLocation.parse(String.format("mega_showdown:textures/gui/summary/tera_types/%s.png", raidType.getSerializedName())), TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE);
+        } else if (raidType != RaidType.STELLAR) {
             var element = ElementalTypes.get(raidType.name());
             int offset = element.getTextureXMultiplier();
             typeIcon = new MapImage(ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "textures/gui/types.png"), TYPE_TEXTURE_SIZE * offset, TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE, 0xffffff, 1f);
-        } else if (ModCompat.MEGA_SHOWDOWN_LOADED) {
-            typeIcon = new MapImage(ResourceLocation.parse(String.format("mega_showdown:textures/gui/summary/tera_types/%s.png", raidType.getSerializedName())), TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE);
         } else {
             LOGGER.error("Invalid element: {}", raidType.name());
             return;
         }
-        int displaySize = CriConfig.iconSize();
+        int displaySize = teraIcon ? CriConfig.teraIconSize() : CriConfig.iconSize();
 
         typeIcon.centerAnchors();
         typeIcon.setDisplayWidth(displaySize);
@@ -81,6 +86,11 @@ public class JourneyMarkerManager {
         try {
             jmApi.show(marker);
             trackedMarkers.put(posStr, marker);
+            if (teraIcon) {
+                teraMarkers.add(posStr);
+            } else {
+                teraMarkers.remove(posStr);
+            }
         } catch (Exception e) {
             LOGGER.error("Can't add marker overlay", e);
         }
@@ -93,17 +103,20 @@ public class JourneyMarkerManager {
         String posStr = pos.toShortString();
         try {
             var marker = trackedMarkers.remove(posStr);
+            teraMarkers.remove(posStr);
             jmApi.remove(marker);
         } catch (Exception e) {
             LOGGER.error("Can't remove marker overlay", e);
         }
     }
 
-    public static void refreshIconSize(int displaySize) {
+    public static void refreshIconSizes(int iconSize, int teraIconSize) {
         if (jmApi == null) {
             return;
         }
-        for (MarkerOverlay marker : trackedMarkers.values()) {
+        for (Map.Entry<String, MarkerOverlay> entry : trackedMarkers.entrySet()) {
+            MarkerOverlay marker = entry.getValue();
+            int displaySize = teraMarkers.contains(entry.getKey()) ? teraIconSize : iconSize;
             marker.getIcon()
                     .setDisplayWidth(displaySize)
                     .setDisplayHeight(displaySize)

@@ -49,6 +49,7 @@ public class XaeroMarkerManager {
         trackedMarkers.put(posStr, holder);
 
         Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), boss.getDisplaySpecies().getTranslatedName().getString(), "S", WaypointColor.AQUA);
+        waypoint.setTemporary(true);
         SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
         if (minimap.waypointWorld() == null) {
             initWaypoints();
@@ -61,7 +62,7 @@ public class XaeroMarkerManager {
         if (wWorld == null) {
             return;
         }
-        wWorld.getCurrentWaypointSet().add(waypoint);
+        wWorld.getWaypointSet("gui.xaero_default").add(waypoint);
 
 //        var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
 //        waypointSet.add(waypoint);

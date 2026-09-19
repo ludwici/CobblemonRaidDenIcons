@@ -1,9 +1,8 @@
 package com.ludwici.cri.mixin.xaero;
 
-import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
+import com.ludwici.cri.plugins.xaero.XaeroMarkerApi;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +23,7 @@ public abstract class WaypointWorldRendererMixin extends MinimapElementRenderer<
 
     @Inject(method = "renderElement(Lxaero/common/minimap/waypoints/Waypoint;ZZDFDDLxaero/hud/minimap/element/render/MinimapElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)Z", cancellable = true, at = @At("HEAD"))
     private void cri$render(Waypoint w, boolean highlighted, boolean outOfBounds, double optionalDepth, float optionalScale, double partialX, double partialY, MinimapElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, CallbackInfoReturnable<Boolean> cir) {
-        if (XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString()) != null) {
+        if (XaeroMarkerApi.isTracked(w)) {
             cir.setReturnValue(false);
         }
     }

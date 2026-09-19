@@ -1,24 +1,14 @@
 package com.ludwici.cri.mixin.xaero;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.types.ElementalTypes;
-import com.ludwici.cri.ModCompat;
-import com.ludwici.cri.config.CriConfig;
 import com.ludwici.cri.network.RaidBossHolder;
-import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.ludwici.cri.plugins.xaero.XaeroMarkerApi;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
-import com.necro.raid.dens.common.data.raid.RaidType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -35,46 +25,21 @@ import xaero.map.mods.gui.Waypoint;
 import xaero.map.mods.gui.WaypointRenderContext;
 import xaero.map.mods.gui.WaypointRenderer;
 
-import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
-
 @Mixin(WaypointRenderer.class)
 public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint, WaypointRenderContext, WaypointRenderer> {
-    @Unique private static final int TYPE_TEXTURE_SIZE = 36;
-
     protected WaypointRendererMixin(WaypointRenderContext context, MapElementRenderProvider<Waypoint, WaypointRenderContext> provider, MapElementReader<Waypoint, WaypointRenderContext, WaypointRenderer> reader) {
         super(context, provider, reader);
     }
 
     @Inject(method = "renderElement(Lxaero/map/mods/gui/Waypoint;ZDFDDLxaero/map/element/render/ElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRendererProvider;)Z", at = @At("HEAD"), remap = false, cancellable = true)
     private void cri$render(Waypoint w, boolean hovered, double optionalDepth, float optionalScale, double partialX, double partialY, ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfoReturnable<Boolean> cir) {
-        RaidBossHolder holder = XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString());
-        if (holder == null) return;
-
-        ResourceLocation image;
-        int displaySize = CriConfig.iconSize();
-        RaidType raidType = holder.raidType();
-        int posOffset = displaySize / 2;
-        int u, sourceWidth, sourceHeight, textureWidth, textureHeight;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        if (raidType != RaidType.STELLAR) {
-            image = ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "textures/gui/types.png");
-            var element = ElementalTypes.get(raidType.name());
-            u = TYPE_TEXTURE_SIZE * element.getTextureXMultiplier();
-            sourceWidth = sourceHeight = TYPE_TEXTURE_SIZE;
-            textureWidth = 648; textureHeight = TYPE_TEXTURE_SIZE;
-        } else if (ModCompat.MEGA_SHOWDOWN_LOADED) {
-            image = ResourceLocation.parse(String.format("mega_showdown:textures/gui/summary/tera_types/%s.png", raidType.getSerializedName()));
-            u = 0; sourceWidth = sourceHeight = textureWidth = textureHeight = 32;
-        } else {
-            LOGGER.error("Invalid element: {}", raidType.name()); return;
+        RaidBossHolder holder = XaeroMarkerApi.getHolder(w);
+        if (holder == null) {
+            return;
         }
-
-        RenderSystem.setShaderTexture(0, image);
-        RenderSystem.enableBlend();
-        guiGraphics.blit(image, -posOffset, -posOffset, displaySize, displaySize, (float) u, 0F, sourceWidth, sourceHeight, textureWidth, textureHeight);
-        RenderSystem.disableBlend();
+        if (!XaeroMarkerApi.renderRaidIcon(holder, guiGraphics)) {
+            return;
+        }
 
         if (hovered) {
             var boss = ClientRaidRegistry.getRaidBoss(holder.bossId());
@@ -97,7 +62,7 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
 
     @Inject(method = "renderElementShadow(Lxaero/map/mods/gui/Waypoint;ZFDDLxaero/map/element/render/ElementRenderInfo;Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRendererProvider;)V", at = @At("HEAD"), cancellable = true)
     private void cri$hideShadow(Waypoint w, boolean hovered, float optionalScale, double partialX, double partialY, ElementRenderInfo renderInfo, GuiGraphics guiGraphics, MultiBufferSource.BufferSource vanillaBufferSource, MultiTextureRenderTypeRendererProvider rendererProvider, CallbackInfo ci) {
-        if (XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(w.getX(), w.getY(), w.getZ()).toShortString()) != null) {
+        if (XaeroMarkerApi.isTracked(w)) {
             ci.cancel();
         }
     }

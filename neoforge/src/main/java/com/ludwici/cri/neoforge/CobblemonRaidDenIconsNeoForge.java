@@ -21,6 +21,7 @@ public final class CobblemonRaidDenIconsNeoForge {
         ModCompat.init();
         container.registerConfig(CLIENT, NeoConfig.SPEC);
         CriConfig.setIconSizeSupplier(NeoConfig::iconSize);
+        CriConfig.setTeraIconSizeSupplier(NeoConfig::teraIconSize);
         modBus.addListener(NeoPayloads::register);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {

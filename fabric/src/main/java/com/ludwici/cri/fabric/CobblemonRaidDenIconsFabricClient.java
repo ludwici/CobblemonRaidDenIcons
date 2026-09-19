@@ -9,11 +9,14 @@ import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.InteractionResult;
+
+import java.util.List;
 
 public final class CobblemonRaidDenIconsFabricClient implements ClientModInitializer {
     @Override
@@ -28,10 +31,18 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
 
     private static void registerConfig() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        if (!ModCompat.MEGA_SHOWDOWN_LOADED) {
+            AutoConfig.getGuiRegistry(ModConfig.class).registerAnnotationProvider(
+                    (i18n, field, config, defaults, registry) -> List.of(),
+                    field -> field.getName().equals("teraIconSize"),
+                    ConfigEntry.BoundedDiscrete.class
+            );
+        }
         CriConfig.setIconSizeSupplier(() -> ModConfig.get().iconSize);
+        CriConfig.setTeraIconSizeSupplier(() -> ModConfig.get().teraIconSize);
         AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((holder, config) -> {
             if (ModCompat.JOURNEYMAP_LOADED) {
-                JourneyMarkerManager.refreshIconSize(config.iconSize);
+                JourneyMarkerManager.refreshIconSizes(config.iconSize, config.teraIconSize);
             }
             return InteractionResult.PASS;
         });

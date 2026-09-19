@@ -13,6 +13,9 @@ public final class ModConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = ConfigConstants.MIN_ICON_SIZE, max = ConfigConstants.MAX_ICON_SIZE)
     public int iconSize = ConfigConstants.DEFAULT_ICON_SIZE;
 
+    @ConfigEntry.BoundedDiscrete(min = ConfigConstants.MIN_ICON_SIZE, max = ConfigConstants.MAX_TERA_ICON_SIZE)
+    public int teraIconSize = ConfigConstants.DEFAULT_TERA_ICON_SIZE;
+
     public static ModConfig get() {
         return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
     }
@@ -20,5 +23,6 @@ public final class ModConfig implements ConfigData {
     @Override
     public void validatePostLoad() {
         iconSize = Math.clamp(iconSize, ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_ICON_SIZE);
+        teraIconSize = Math.clamp(teraIconSize, ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_TERA_ICON_SIZE);
     }
 }

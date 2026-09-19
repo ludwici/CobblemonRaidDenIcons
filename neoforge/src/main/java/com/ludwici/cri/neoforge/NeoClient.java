@@ -14,7 +14,11 @@ public final class NeoClient {
     }
 
     public static void init(IEventBus modEventBus, ModContainer container) {
-        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) ->
+                new ConfigurationScreen(modContainer, parent,
+                        (context, key, original) -> ModCompat.MEGA_SHOWDOWN_LOADED || !key.equals("teraIconSize")
+                                ? original
+                                : null));
         modEventBus.addListener(NeoClient::onConfigReload);
     }
 
@@ -24,7 +28,7 @@ public final class NeoClient {
         }
 
         if (ModCompat.JOURNEYMAP_LOADED) {
-            JourneyMarkerManager.refreshIconSize(NeoConfig.iconSize());
+            JourneyMarkerManager.refreshIconSizes(NeoConfig.iconSize(), NeoConfig.teraIconSize());
         }
     }
 }
