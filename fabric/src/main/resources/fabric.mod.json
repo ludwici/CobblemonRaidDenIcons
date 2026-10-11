@@ -5,6 +5,10 @@
   "name": "Cobblemon Raid Dens Icons",
   "description": "Display Cobblemon Raid Dens icons on JourneyMap and Xaero maps.",
   "authors": ["ludwici"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/cobblemon-raid-den-icons",
+    "sources": "https://github.com/ludwici/CobblemonRaidDenIcons"
+  },
   "license": "LGPL v3",
   "icon": "assets/cri/icon.png",
   "environment": "*",

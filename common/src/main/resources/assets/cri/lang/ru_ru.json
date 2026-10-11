@@ -1,1 +1,5 @@
-{"text.autoconfig.cri.option.iconSize":"Размер иконок","text.autoconfig.cri.option.teraIconSize":"Размер Tera-иконок"}
+{
+  "text.autoconfig.cri.title": "Cobblemon Raid Dens Icons",
+  "text.autoconfig.cri.option.iconSize": "Размер иконок",
+  "text.autoconfig.cri.option.teraIconSize": "Размер Tera-иконок"
+}

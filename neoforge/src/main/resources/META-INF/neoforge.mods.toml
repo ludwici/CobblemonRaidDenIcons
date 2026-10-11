@@ -1,11 +1,13 @@
 modLoader="javafml"
 loaderVersion="[4,)"
 license="LGPL v3"
+issueTrackerURL="https://github.com/ludwici/CobblemonRaidDenIcons"
 
 [[mods]]
 modId="cri"
 version="${version}"
 displayName="Cobblemon Raid Dens Icons"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/cobblemon-raid-den-icons"
 authors="ludwici"
 description="Display Cobblemon Raid Dens icons on JourneyMap and Xaero maps."
 logoFile="assets/cri/icon.png"
