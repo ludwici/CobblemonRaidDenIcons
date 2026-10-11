@@ -1,6 +1,7 @@
 package com.ludwici.cri.neoforge;
 
 import com.ludwici.cri.ModCompat;
+import com.ludwici.cri.client.RaidMarkerLifecycle;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;

@@ -34,23 +34,23 @@ public class JourneyMarkerManager {
         jmApi = api;
     }
 
-    public static void registerMarker(RaidCrystalBlockEntity blockEntity, Level world, RaidBossHolder holder) {
+    public static boolean registerMarker(RaidCrystalBlockEntity blockEntity, Level world, RaidBossHolder holder) {
         if (jmApi == null) {
-            return;
+            return false;
         }
 
         if (!jmApi.playerAccepts(MODID, DisplayType.Marker)) {
-            return;
+            return false;
         }
 
         if (blockEntity == null) {
             LOGGER.error("RaidCrystalBlockEntity is null");
-            return;
+            return false;
         }
         var boss = ClientRaidRegistry.getRaidBoss(holder.bossId());
         if (boss == null) {
             LOGGER.error("boss is null");
-            return;
+            return false;
         }
 
         BlockPos pos = blockEntity.getBlockPos();
@@ -72,7 +72,7 @@ public class JourneyMarkerManager {
             typeIcon = new MapImage(ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "textures/gui/types.png"), TYPE_TEXTURE_SIZE * offset, TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE, TYPE_TEXTURE_SIZE, 0xffffff, 1f);
         } else {
             LOGGER.error("Invalid element: {}", raidType.name());
-            return;
+            return false;
         }
         int displaySize = teraIcon ? CriConfig.teraIconSize() : CriConfig.iconSize();
 
@@ -91,8 +91,10 @@ public class JourneyMarkerManager {
             } else {
                 teraMarkers.remove(posStr);
             }
+            return true;
         } catch (Exception e) {
             LOGGER.error("Can't add marker overlay", e);
+            return false;
         }
     }
 

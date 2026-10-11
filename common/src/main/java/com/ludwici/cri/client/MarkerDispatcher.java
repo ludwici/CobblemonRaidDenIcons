@@ -9,15 +9,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 public final class MarkerDispatcher {
-    private MarkerDispatcher() {
-    }
+    private MarkerDispatcher() {}
 
-    public static void register(RaidCrystalBlockEntity blockEntity, Level level, RaidBossHolder holder) {
-        if (ModCompat.JOURNEYMAP_LOADED) {
-            JourneyMarkerManager.registerMarker(blockEntity, level, holder);
-        } else if (ModCompat.XAERO_WORLD_MAP_LOADED) {
-            XaeroMarkerManager.registerMarker(blockEntity, holder);
-        }
+    public static boolean register(RaidCrystalBlockEntity blockEntity, Level level, RaidBossHolder holder) {
+        if (ModCompat.JOURNEYMAP_LOADED) return JourneyMarkerManager.registerMarker(blockEntity, level, holder);
+        if (ModCompat.XAERO_WORLD_MAP_LOADED) return XaeroMarkerManager.registerMarker(blockEntity, holder);
+        return false;
     }
 
     public static void unregister(BlockPos pos) {

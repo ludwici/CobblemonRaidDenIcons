@@ -32,47 +32,46 @@ public class XaeroMarkerManager {
         return trackedMarkers.get(pos);
     }
 
-    public static void registerMarker(RaidCrystalBlockEntity blockEntity, RaidBossHolder holder) {
+    public static boolean registerMarker(RaidCrystalBlockEntity blockEntity, RaidBossHolder holder) {
         if (blockEntity == null) {
             LOGGER.error("RaidCrystalBlockEntity is null");
-            return;
+            return false;
         }
 
         var boss = ClientRaidRegistry.getRaidBoss(holder.bossId());
         if (boss == null) {
             LOGGER.error("boss is null");
-            return;
+            return false;
         }
 
         BlockPos pos = blockEntity.getBlockPos();
         String posStr = pos.toShortString();
-        trackedMarkers.put(posStr, holder);
 
         Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), boss.getDisplaySpecies().getTranslatedName().getString(), "S", WaypointColor.AQUA);
         waypoint.setTemporary(true);
+        if (SupportMods.xaeroMinimap == null) return false;
         SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
         if (minimap.waypointWorld() == null) {
             initWaypoints();
         }
-//        if (minimap.waypointWorld().getWaypointSet("gui.xaero_default").isEmpty()) {
-//            minimap.waypointWorld().addWaypointSet("gui.xaero_default");
-//        }
 
         var wWorld = minimap.waypointWorld();
-        if (wWorld == null) {
-            return;
-        }
-        wWorld.getWaypointSet("gui.xaero_default").add(waypoint);
+        if (wWorld == null) return false;
+        var waypointSet = wWorld.getWaypointSet("gui.xaero_default");
+        if (waypointSet == null) return false;
+        waypointSet.add(waypoint);
+        trackedMarkers.put(posStr, holder);
+        return true;
 
-//        var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
-//        waypointSet.add(waypoint);
     }
 
     private static void initWaypoints() {
         Minecraft minecraft = Minecraft.getInstance();
-        ResourceKey<Level> dimension = Minecraft.getInstance().level.dimension();
         WorldMapSession currentSession = XaeroWorldMapCore.currentSession;
+        if (minecraft.level == null || minecraft.player == null || currentSession == null) return;
+        ResourceKey<Level> dimension = minecraft.level.dimension();
         MapProcessor mapProcessor = currentSession.getMapProcessor();
+        if (mapProcessor == null || mapProcessor.getMapWorld() == null) return;
         GuiMap guiMap = new GuiMap(null, null, mapProcessor, minecraft.player);
         SupportMods.xaeroMinimap.checkWaypoints(mapProcessor.getMapWorld().isMultiplayer(), dimension, "", guiMap.width, guiMap.height, guiMap, mapProcessor.getMapWorld(), mapProcessor.getWorldDimensionTypeRegistry());
     }

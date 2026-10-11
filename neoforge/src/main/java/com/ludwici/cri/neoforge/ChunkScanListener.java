@@ -1,16 +1,14 @@
 package com.ludwici.cri.neoforge;
 
 import com.ludwici.cri.CobblemonRaidDenIcons;
-import com.ludwici.cri.client.MarkerDispatcher;
 import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
-import com.necro.raid.dens.common.client.ClientRaidRegistry;
+import com.necro.raid.dens.common.blocks.block.RaidCrystalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -31,19 +29,15 @@ public class ChunkScanListener {
         LevelAccessor level = event.getLevel();
         positions.forEach(blockPos -> {
             BlockEntity be = chunkAccess.getBlockEntity(blockPos);
-            if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
-                if (level.isClientSide()) {
-                    var rb = ClientRaidRegistry.getRaidBoss(raidCrystalBlock.getRaidBossLocation());
-                    String stars;
-                    try {
-                        stars = rb.getTier().getStars();
-                    } catch (MatchException e) {
-                        stars = "";
-                    }
-                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
-                    MarkerDispatcher.register(raidCrystalBlock, (Level) level, holder);
-                } else {
+            if (level.isClientSide()) {
+                if (be instanceof RaidCrystalBlockEntity || chunkAccess.getBlockState(blockPos).getBlock() instanceof RaidCrystalBlock) {
+                    NeoClientChunks.track(level, blockPos);
+                }
+            } else if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
                     var rb = raidCrystalBlock.getRaidBoss();
+                    if (rb == null) {
+                        return;
+                    }
                     String stars;
                     try {
                         stars = rb.getTier().getStars();
@@ -54,7 +48,6 @@ public class ChunkScanListener {
                     RaidBlockSpawnS2CPayload payload = new RaidBlockSpawnS2CPayload(blockPos, holder);
                     ChunkPos chunkPos = new ChunkPos(blockPos);
                     PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, chunkPos, payload);
-                }
             }
         });
     }
@@ -64,16 +57,16 @@ public class ChunkScanListener {
         ChunkAccess chunkAccess = event.getChunk();
         LevelAccessor level = event.getLevel();
         Set<BlockPos> positions = chunkAccess.getBlockEntitiesPos();
+        if (level.isClientSide()) {
+            NeoClientChunks.unload(level, chunkAccess.getPos());
+            return;
+        }
         positions.forEach(blockPos -> {
             BlockEntity be = chunkAccess.getBlockEntity(blockPos);
-            if (be instanceof RaidCrystalBlockEntity raidCrystalBlock) {
-                if (level.isClientSide()) {
-                    MarkerDispatcher.unregister(blockPos);
-                } else {
-                    RaidBlockDespawnS2CPayload payload = new RaidBlockDespawnS2CPayload(blockPos);
-                    ChunkPos chunkPos = new ChunkPos(blockPos);
-                    PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, chunkPos, payload);
-                }
+            if (be instanceof RaidCrystalBlockEntity) {
+                RaidBlockDespawnS2CPayload payload = new RaidBlockDespawnS2CPayload(blockPos);
+                ChunkPos chunkPos = new ChunkPos(blockPos);
+                PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, chunkPos, payload);
             }
         });
     }
