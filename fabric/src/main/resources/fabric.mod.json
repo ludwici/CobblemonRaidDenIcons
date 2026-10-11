@@ -22,7 +22,7 @@
     "minecraft": "~1.21.1",
     "java": ">=21",
     "architectury": ">=13.0.8",
-    "cobblemon": ">=1.8.0",
-    "cobblemonraiddens": ">=0.12.0"
+    "cobblemon": ">=1.8.1",
+    "cobblemonraiddens": ">=0.13.2"
   }
 }

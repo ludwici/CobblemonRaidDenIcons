@@ -20,6 +20,7 @@ dependencies {
     modImplementation "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
     modImplementation "com.cobblemon:neoforge:${rootProject.cobblemon_version}"
     modImplementation "software.bernie.geckolib:geckolib-neoforge-${rootProject.geckolib_version}"
+    include(modApi "me.shedaniel.cloth:cloth-config-neoforge:$rootProject.cloth_config_version")
     modImplementation "curse.maven:cobblemonraiddens-1349231:${rootProject.raiddens_neoforge_file}"
 
     modCompileOnlyApi "info.journeymap:journeymap-api-neoforge:${rootProject.journeymap_api_version}"
