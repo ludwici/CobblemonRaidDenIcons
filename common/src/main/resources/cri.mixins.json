@@ -10,6 +10,7 @@
     "xaero.SupportXaeroMinimapAccessor",
     "xaero.WaypointMapRendererMixin",
     "xaero.WaypointRendererMixin",
+    "xaero.WaypointReaderMixin",
     "xaero.WaypointWorldRendererMixin"
   ],
   "injectors": { "defaultRequire": 1 }

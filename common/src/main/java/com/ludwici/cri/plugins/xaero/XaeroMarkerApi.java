@@ -45,11 +45,18 @@ public final class XaeroMarkerApi {
         return boss != null && "tera".equalsIgnoreCase(boss.getFeature());
     }
 
+    public static int getIconSize(RaidBossHolder holder) {
+        if ((isTeraRaid(holder) || holder.raidType() == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED) {
+            return CriConfig.teraIconSize();
+        }
+        return CriConfig.iconSize();
+    }
+
     public static boolean renderRaidIcon(RaidBossHolder holder, GuiGraphics guiGraphics) {
         ResourceLocation image;
         RaidType raidType = holder.raidType();
         boolean teraIcon = (isTeraRaid(holder) || raidType == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
-        int displaySize = teraIcon ? CriConfig.teraIconSize() : CriConfig.iconSize();
+        int displaySize = getIconSize(holder);
         int posOffset = displaySize / 2;
         int u;
         int sourceWidth;

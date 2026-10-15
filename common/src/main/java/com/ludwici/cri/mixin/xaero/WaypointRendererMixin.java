@@ -43,19 +43,28 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
 
         if (hovered) {
             var boss = ClientRaidRegistry.getRaidBoss(holder.bossId());
-            PoseStack matrixStack = guiGraphics.pose();
-            String name = String.format("%s (%s)", boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars());
-            Font fontRenderer = Minecraft.getInstance().font;
-            int len = fontRenderer.width(name);
-            matrixStack.scale(1.5F, 1.5F, 1F);
-            int bgLen = len + 4;
-            int color = WaypointColor.BLACK.getHex();
-            float red = (float)(color >> 16 & 255) / 255F;
-            float green = (float)(color >> 8 & 255) / 255F;
-            float blue = (float)(color & 255) / 255F;
-            MapRenderHelper.fillIntoExistingBuffer(matrixStack.last().pose(), this.context.textBGConsumer, -bgLen / 2, -1, bgLen / 2, 11, red, green, blue, 1);
-            matrixStack.translate(0F, 0F, 1F);
-            Misc.drawNormalText(matrixStack, name, (float)(-len) / 2F, 1F, 16777215, false, vanillaBufferSource);
+            if (boss != null) {
+                PoseStack matrixStack = guiGraphics.pose();
+                matrixStack.pushPose();
+                try {
+                    String name = String.format("%s (%s)", boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars());
+                    Font fontRenderer = Minecraft.getInstance().font;
+                    int len = fontRenderer.width(name);
+                    float tooltipY = -(XaeroMarkerApi.getIconSize(holder) / 2F + 20F);
+                    matrixStack.translate(0F, tooltipY, 0F);
+                    matrixStack.scale(1.5F, 1.5F, 1F);
+                    int bgLen = len + 4;
+                    int color = WaypointColor.BLACK.getHex();
+                    float red = (float) (color >> 16 & 255) / 255F;
+                    float green = (float) (color >> 8 & 255) / 255F;
+                    float blue = (float) (color & 255) / 255F;
+                    MapRenderHelper.fillIntoExistingBuffer(matrixStack.last().pose(), this.context.textBGConsumer, -bgLen / 2, -1, bgLen / 2, 11, red, green, blue, 1);
+                    matrixStack.translate(0F, 0F, 1F);
+                    Misc.drawNormalText(matrixStack, name, (float) (-len) / 2F, 1F, 16777215, false, vanillaBufferSource);
+                } finally {
+                    matrixStack.popPose();
+                }
+            }
         }
         cir.cancel();
     }
