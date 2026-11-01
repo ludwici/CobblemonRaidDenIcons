@@ -41,13 +41,13 @@ side="BOTH"
 [[dependencies.cri]]
 modId="cobblemon"
 type="required"
-versionRange="[1.8.1,)"
+versionRange="[1.8.4,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.cri]]
 modId="cobblemonraiddens"
 type="required"
-versionRange="[0.13.2,)"
+versionRange="[0.13.5,)"
 ordering="AFTER"
 side="BOTH"
