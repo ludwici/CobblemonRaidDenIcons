@@ -1,14 +1,18 @@
 package com.ludwici.cri.plugins.xaero;
 
-import com.ludwici.cri.mixin.xaero.SupportXaeroMinimapAccessor;
+import com.ludwici.cri.CobblemonRaidDenIcons;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import xaero.common.XaeroMinimapSession;
 import xaero.common.minimap.waypoints.Waypoint;
+import xaero.common.minimap.waypoints.WaypointWorld;
+import xaero.hud.minimap.waypoint.set.WaypointSet;
 import xaero.hud.minimap.waypoint.WaypointColor;
 import xaero.map.MapProcessor;
 import xaero.map.WorldMapSession;
@@ -16,88 +20,134 @@ import xaero.map.core.XaeroWorldMapCore;
 import xaero.map.gui.GuiMap;
 import xaero.map.mods.SupportMods;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
-
 public class XaeroMarkerManager {
     public static final XaeroMarkerManager INSTANCE = new XaeroMarkerManager();
-
-    private static final Map<String, RaidBossHolder> trackedMarkers = new HashMap<>();
+    public static final ResourceLocation ORIGIN = CobblemonRaidDenIcons.id("raid_marker");
+    private static final Map<BlockPos, Marker> trackedMarkers = new HashMap<>();
+    private static boolean initializing;
 
     public XaeroMarkerManager() {}
 
-    public RaidBossHolder getHolder(String pos) {
-        return trackedMarkers.get(pos);
+    public RaidBossHolder getHolder(BlockPos pos) {
+        Marker marker = trackedMarkers.get(pos);
+        return marker == null ? null : marker.holder();
+    }
+
+    public static boolean isReady() {
+        return getWaypointSet(false) != null;
+    }
+
+    public static boolean isInitializing() {
+        return initializing;
+    }
+
+    public static boolean isRegistered(BlockPos pos) {
+        Marker marker = trackedMarkers.get(pos);
+        WaypointSet currentSet = getWaypointSet(false);
+        if (marker == null || currentSet == null || marker.set() != currentSet) {
+            return false;
+        }
+        var boss = ClientRaidRegistry.getRaidBoss(marker.holder().bossId());
+        if (boss == null || !marker.waypoint().getName().equals(boss.getDisplaySpecies().getTranslatedName().getString())) {
+            return false;
+        }
+        for (Waypoint waypoint : currentSet.getWaypoints()) {
+            if (waypoint == marker.waypoint()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean registerMarker(RaidCrystalBlockEntity blockEntity, RaidBossHolder holder) {
         if (blockEntity == null) {
-            LOGGER.error("RaidCrystalBlockEntity is null");
             return false;
         }
-
         var boss = ClientRaidRegistry.getRaidBoss(holder.bossId());
         if (boss == null) {
-            LOGGER.error("boss is null");
+            return false;
+        }
+        WaypointSet set = getWaypointSet(true);
+        if (set == null) {
             return false;
         }
 
         BlockPos pos = blockEntity.getBlockPos();
-        String posStr = pos.toShortString();
+        unregisterMarker(pos);
+        ArrayList<Waypoint> previous = new ArrayList<>();
+        set.getWaypoints().forEach(previous::add);
+        for (Waypoint existing : previous) {
+            if (ORIGIN.equals(existing.getThirdPartyOrigin()) && samePos(pos, existing)) {
+                set.remove(existing);
+            }
+        }
 
         Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), boss.getDisplaySpecies().getTranslatedName().getString(), "S", WaypointColor.AQUA);
         waypoint.setTemporary(true);
-        if (SupportMods.xaeroMinimap == null) return false;
-        SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
-        if (minimap.waypointWorld() == null) {
-            initWaypoints();
-        }
-
-        var wWorld = minimap.waypointWorld();
-        if (wWorld == null) return false;
-        var waypointSet = wWorld.getWaypointSet("gui.xaero_default");
-        if (waypointSet == null) return false;
-        waypointSet.add(waypoint);
-        trackedMarkers.put(posStr, holder);
+        waypoint.setThirdPartyOrigin(ORIGIN);
+        set.add(waypoint);
+        trackedMarkers.put(pos.immutable(), new Marker(holder, waypoint, set));
+        SupportMods.xaeroMinimap.requestWaypointsRefresh();
         return true;
+    }
 
+    private static boolean samePos(BlockPos pos, Waypoint waypoint) {
+        return pos.getX() == waypoint.getX() && pos.getY() == waypoint.getY() && pos.getZ() == waypoint.getZ();
+    }
+
+    private static WaypointSet getWaypointSet(boolean initialize) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null || SupportMods.xaeroMinimap == null) {
+            return null;
+        }
+        XaeroMinimapSession session = XaeroMinimapSession.getCurrentSession();
+        if (session == null || session.getWaypointsManager() == null) {
+            return null;
+        }
+        WaypointWorld world = session.getWaypointsManager().getCurrentWorld();
+        if ((world == null || !minecraft.level.dimension().equals(world.getDimId())) && initialize) {
+            initWaypoints();
+            world = session.getWaypointsManager().getCurrentWorld();
+        }
+        if (world == null || !minecraft.level.dimension().equals(world.getDimId())) {
+            return null;
+        }
+        return world.getWaypointSet("gui.xaero_default");
     }
 
     private static void initWaypoints() {
         Minecraft minecraft = Minecraft.getInstance();
         WorldMapSession currentSession = XaeroWorldMapCore.currentSession;
-        if (minecraft.level == null || minecraft.player == null || currentSession == null) return;
+        if (minecraft.level == null || minecraft.player == null || currentSession == null) {
+            return;
+        }
         ResourceKey<Level> dimension = minecraft.level.dimension();
         MapProcessor mapProcessor = currentSession.getMapProcessor();
-        if (mapProcessor == null || mapProcessor.getMapWorld() == null) return;
+        if (mapProcessor == null || mapProcessor.getMapWorld() == null) {
+            return;
+        }
         GuiMap guiMap = new GuiMap(null, null, mapProcessor, minecraft.player);
-        SupportMods.xaeroMinimap.checkWaypoints(mapProcessor.getMapWorld().isMultiplayer(), dimension, "", guiMap.width, guiMap.height, guiMap, mapProcessor.getMapWorld(), mapProcessor.getWorldDimensionTypeRegistry());
+        initializing = true;
+        try {
+            SupportMods.xaeroMinimap.checkWaypoints(mapProcessor.getMapWorld().isMultiplayer(), dimension, "", guiMap.width, guiMap.height, guiMap, mapProcessor.getMapWorld(), mapProcessor.getWorldDimensionTypeRegistry());
+        } finally {
+            initializing = false;
+        }
     }
 
     public static void unregisterMarker(BlockPos pos) {
-        String posStr = pos.toShortString();
-        try {
-            var marker = trackedMarkers.remove(posStr);
-            SupportXaeroMinimapAccessor minimap = (SupportXaeroMinimapAccessor) SupportMods.xaeroMinimap;
-            if (minimap.waypointWorld() == null) {
-                initWaypoints();
+        Marker marker = trackedMarkers.remove(pos);
+        if (marker != null) {
+            marker.set().remove(marker.waypoint());
+            if (SupportMods.xaeroMinimap != null) {
+                SupportMods.xaeroMinimap.requestWaypointsRefresh();
             }
-            var waypointSet = minimap.waypointWorld().getWaypointSet("gui.xaero_default");
-            var set = waypointSet.getWaypoints();
-            int slot = 0;
-            for (var w : set) {
-                var tmpPos = new BlockPos(w.getX(), w.getY(), w.getZ());
-                if (pos.equals(tmpPos)) {
-                    break;
-                }
-                slot++;
-            }
-            waypointSet.remove(slot);
-        } catch (Exception e) {
-            LOGGER.error("Can't remove marker overlay", e);
         }
-
     }
+
+    private record Marker(RaidBossHolder holder, Waypoint waypoint, WaypointSet set) {}
 }

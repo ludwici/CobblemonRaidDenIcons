@@ -1,10 +1,12 @@
 package com.ludwici.cri.fabric;
 
+import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.client.RaidMarkerLifecycle;
 import com.ludwici.cri.config.CriConfig;
 import com.ludwici.cri.fabric.config.ModConfig;
 import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
+import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -25,6 +27,13 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
         registerConfig();
         registerClientNetwork();
 
+        CriPlatform.installRefreshRequester(pos -> {
+            if (!ClientPlayNetworking.canSend(RaidBlockRefreshC2SPayload.ID)) {
+                return false;
+            }
+            ClientPlayNetworking.send(new RaidBlockRefreshC2SPayload(pos));
+            return true;
+        });
         ChunkScanListener.register();
     }
 

@@ -4,14 +4,20 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "ClientPacketListenerMixin",
     "ClientRaidRegistryMixin",
+    "LevelChunkMixin",
     "MinecraftMixin",
     "xaero.GuiRightClickMenuMixin",
     "xaero.SupportXaeroMinimapAccessor",
+    "xaero.SupportXaeroMinimapMixin",
     "xaero.WaypointMapRendererMixin",
     "xaero.WaypointRendererMixin",
     "xaero.WaypointReaderMixin",
-    "xaero.WaypointWorldRendererMixin"
+    "xaero.WaypointWorldRendererMixin",
+    "xaero.XaeroWorldStateMixin"
   ],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

@@ -1,7 +1,11 @@
 package com.ludwici.cri.neoforge;
 
+import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
-import com.ludwici.cri.client.RaidMarkerLifecycle;
+import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
+import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -21,6 +25,14 @@ public final class NeoClient {
                                 ? original
                                 : null));
         modEventBus.addListener(NeoClient::onConfigReload);
+        CriPlatform.installRefreshRequester(pos -> {
+            var connection = Minecraft.getInstance().getConnection();
+            if (connection == null || !NetworkRegistry.hasChannel(connection.getConnection(), null, RaidBlockRefreshC2SPayload.PAYLOAD_ID)) {
+                return false;
+            }
+            PacketDistributor.sendToServer(new RaidBlockRefreshC2SPayload(pos));
+            return true;
+        });
     }
 
     private static void onConfigReload(ModConfigEvent.Reloading event) {

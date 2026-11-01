@@ -21,14 +21,20 @@ public final class XaeroMarkerApi {
     private XaeroMarkerApi() {}
 
     public static RaidBossHolder getHolder(int x, int y, int z) {
-        return XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(x, y, z).toShortString());
+        return XaeroMarkerManager.INSTANCE.getHolder(new BlockPos(x, y, z));
     }
 
     public static RaidBossHolder getHolder(xaero.common.minimap.waypoints.Waypoint waypoint) {
+        if (!XaeroMarkerManager.ORIGIN.equals(waypoint.getThirdPartyOrigin())) {
+            return null;
+        }
         return getHolder(waypoint.getX(), waypoint.getY(), waypoint.getZ());
     }
 
     public static RaidBossHolder getHolder(xaero.map.mods.gui.Waypoint waypoint) {
+        if (!XaeroMarkerManager.ORIGIN.equals(waypoint.getThirdPartyOrigin())) {
+            return null;
+        }
         return getHolder(waypoint.getX(), waypoint.getY(), waypoint.getZ());
     }
 
