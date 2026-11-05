@@ -3,6 +3,9 @@ package com.ludwici.cri.neoforge;
 import com.ludwici.cri.CobblemonRaidDenIcons;
 import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
+import com.ludwici.cri.network.RaidIconAccessS2CPayload;
+import com.ludwici.cri.network.RaidIconServerAccess;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import com.ludwici.cri.config.CriConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -23,6 +26,13 @@ public final class CobblemonRaidDenIconsNeoForge {
         CriConfig.setIconSizeSupplier(NeoConfig::iconSize);
         CriConfig.setTeraIconSizeSupplier(NeoConfig::teraIconSize);
         modBus.addListener(NeoPayloads::register);
+        RaidIconServerAccess.installSender((player, payload) -> {
+            if (!NetworkRegistry.hasChannel(player.connection.getConnection(), null, RaidIconAccessS2CPayload.PAYLOAD_ID)) {
+                return false;
+            }
+            PacketDistributor.sendToPlayer(player, payload);
+            return true;
+        });
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             NeoClient.init(modBus, container);

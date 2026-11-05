@@ -21,8 +21,34 @@ import java.util.Objects;
 public final class RaidMarkerLifecycle {
     private static final Map<BlockPos, MarkerEntry> entries = new HashMap<>();
     private static ClientLevel trackedLevel;
+    private static boolean serverAccess;
 
     private RaidMarkerLifecycle() {}
+
+    public static void setServerAccess(boolean allowed) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!minecraft.isSameThread()) {
+            minecraft.execute(() -> setServerAccess(allowed));
+            return;
+        }
+        if (serverAccess == allowed) {
+            return;
+        }
+        serverAccess = allowed;
+        if (!allowed) {
+            for (Map.Entry<BlockPos, MarkerEntry> tracked : entries.entrySet()) {
+                MarkerEntry entry = tracked.getValue();
+                if (entry.active != null) {
+                    MarkerDispatcher.unregister(tracked.getKey());
+                    entry.active = null;
+                }
+                entry.packetHolder = null;
+                entry.refreshRequested = false;
+            }
+            return;
+        }
+        markerApiReady();
+    }
 
     public static void track(ClientLevel level, BlockPos pos, RaidBossHolder holder) {
         if (level == null || Minecraft.getInstance().level != level) {
@@ -33,7 +59,7 @@ public final class RaidMarkerLifecycle {
         }
         changeLevel(level);
         MarkerEntry entry = entries.computeIfAbsent(pos.immutable(), ignored -> new MarkerEntry());
-        if (holder != null) {
+        if (holder != null && serverAccess) {
             entry.packetHolder = holder;
             entry.refreshRequested = true;
         } else {
@@ -41,7 +67,7 @@ public final class RaidMarkerLifecycle {
                 entry.observedBossId = blockEntity.getRaidBossLocation();
                 entry.bossObserved = true;
             }
-            if (!entry.refreshRequested) {
+            if (serverAccess && !entry.refreshRequested) {
                 entry.refreshRequested = CriPlatform.requestRefresh(pos);
             }
         }
@@ -128,7 +154,7 @@ public final class RaidMarkerLifecycle {
                     entry.active = null;
                 }
                 update(level, pos, entry);
-                if (!entry.refreshRequested) {
+                if (serverAccess && !entry.refreshRequested) {
                     entry.refreshRequested = CriPlatform.requestRefresh(pos);
                 }
             }
@@ -174,6 +200,9 @@ public final class RaidMarkerLifecycle {
         }
         entries.clear();
         trackedLevel = level;
+        if (level == null) {
+            serverAccess = false;
+        }
     }
 
     private static ResourceLocation getBossId(ClientLevel level, BlockPos pos, MarkerEntry entry) {
@@ -188,6 +217,13 @@ public final class RaidMarkerLifecycle {
 
     private static void update(ClientLevel level, BlockPos pos, MarkerEntry entry) {
         if (!level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
+            return;
+        }
+        if (!serverAccess) {
+            if (entry.active != null) {
+                MarkerDispatcher.unregister(pos);
+                entry.active = null;
+            }
             return;
         }
         if (!(level.getBlockState(pos).getBlock() instanceof RaidCrystalBlock)) {

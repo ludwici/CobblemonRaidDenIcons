@@ -8,6 +8,7 @@ import com.ludwici.cri.fabric.config.ModConfig;
 import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
+import com.ludwici.cri.network.RaidIconAccessS2CPayload;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -57,6 +58,9 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
     }
 
     public static void registerClientNetwork() {
+        ClientPlayNetworking.registerGlobalReceiver(RaidIconAccessS2CPayload.ID, (payload, context) -> {
+            context.client().execute(() -> RaidMarkerLifecycle.setServerAccess(payload.allowed()));
+        });
         ClientPlayNetworking.registerGlobalReceiver(RaidBlockSpawnS2CPayload.ID, (payload, context) -> {
             context.client().execute(() -> {
                 ClientLevel world = context.client().level;

@@ -4,6 +4,7 @@ import com.ludwici.cri.network.RaidBlockDespawnS2CPayload;
 import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import com.ludwici.cri.network.RaidSyncServer;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
+import com.ludwici.cri.network.RaidIconAccessS2CPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -20,6 +21,9 @@ public final class NeoPayloads {
         });
         registrar.playToClient(RaidBlockDespawnS2CPayload.ID, RaidBlockDespawnS2CPayload.CODEC, (payload, context) -> {
             context.enqueueWork(() -> NeoClientPayloads.despawn(context.player().level(), payload));
+        });
+        registrar.playToClient(RaidIconAccessS2CPayload.ID, RaidIconAccessS2CPayload.CODEC, (payload, context) -> {
+            context.enqueueWork(() -> NeoClientPayloads.access(payload));
         });
         registrar.playToServer(RaidBlockRefreshC2SPayload.ID, RaidBlockRefreshC2SPayload.CODEC, (payload, context) -> {
             context.enqueueWork(() -> {

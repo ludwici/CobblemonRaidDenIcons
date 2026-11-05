@@ -1,5 +1,6 @@
 package com.ludwici.cri.network;
 
+import com.ludwici.cri.config.RaidServerConfig;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,6 +13,9 @@ public final class RaidSyncServer {
     private RaidSyncServer() {}
 
     public static void refresh(ServerPlayer player, BlockPos pos, Consumer<CustomPacketPayload> reply) {
+        if (!RaidServerConfig.allowed(player)) {
+            return;
+        }
         ServerLevel level = player.serverLevel();
         int distance = (Math.max(32, player.server.getPlayerList().getViewDistance()) + 2) * 16;
         if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > (double) distance * distance || !level.hasChunkAt(pos)) {

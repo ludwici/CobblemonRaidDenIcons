@@ -17,6 +17,9 @@
     "xaero.WaypointWorldRendererMixin",
     "xaero.XaeroWorldStateMixin"
   ],
+  "mixins": [
+    "InventoryServerAccessMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
