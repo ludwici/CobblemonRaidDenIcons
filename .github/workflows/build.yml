@@ -1,0 +1,38 @@
+name: Build CRDI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.loader }} 1.21.1
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [fabric, neoforge]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build JAR
+        run: ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace
+      - name: Validate CurseForge publication (dry run only)
+        run: ./gradlew :${{ matrix.loader }}:publishMods -PpublishDryRun=true --no-daemon
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: cri-${{ matrix.loader }}-1.21.1-1.10.0
+          path: ${{ matrix.loader }}/build/libs/cri-${{ matrix.loader }}-1.21.1-1.10.0.jar
+          if-no-files-found: error
+          retention-days: 30

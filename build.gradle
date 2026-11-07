@@ -2,6 +2,7 @@ plugins {
     id 'dev.architectury.loom' version '1.14.473' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.gradleup.shadow' version '9.6.1' apply false
+    id 'me.modmuss50.mod-publish-plugin' version '2.2.1' apply false
     id 'org.jetbrains.kotlin.jvm' version '2.2.10'
 }
 
@@ -38,7 +39,7 @@ subprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
 
     base {
-        archivesName = "${rootProject.archives_base_name}-${project.name}"
+        archivesName = "${rootProject.archives_base_name}-${project.name}-${rootProject.minecraft_version}"
     }
 
     dependencies {

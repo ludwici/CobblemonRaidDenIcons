@@ -1,5 +1,6 @@
 plugins {
     id 'com.gradleup.shadow'
+    id 'me.modmuss50.mod-publish-plugin'
 }
 
 architectury {
@@ -59,4 +60,27 @@ remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = null
+}
+
+
+publishMods {
+    file = remapJar.archiveFile
+    changelog = providers.fileContents(rootProject.layout.projectDirectory.file("CHANGELOG.md")).asText
+    version = "${rootProject.minecraft_version}-${rootProject.mod_version}"
+    displayName = remapJar.archiveFile.map { it.asFile.name }
+    type = STABLE
+    modLoaders.add("neoforge")
+    dryRun = providers.gradleProperty("publishDryRun").map { it.toBoolean() }.orElse(false)
+
+    curseforge {
+        projectId = "1604194"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN").orElse(providers.gradleProperty("CURSEFORGE_TOKEN"))
+        minecraftVersions.add(rootProject.minecraft_version)
+        javaVersions.add(JavaVersion.VERSION_21)
+        client = true
+        server = true
+        requires("cobblemon")
+        requires("cobblemonraiddens")
+        requires("architectury-api")
+    }
 }
