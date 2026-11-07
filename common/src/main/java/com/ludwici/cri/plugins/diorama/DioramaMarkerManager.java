@@ -60,6 +60,22 @@ public final class DioramaMarkerManager {
         }
     }
 
+    public static boolean isRaidPin(Object pin) {
+        if (pin == null || ownedWaypoints.isEmpty()) {
+            return false;
+        }
+        Api bridge = api();
+        if (bridge == null) {
+            return false;
+        }
+        try {
+            return ownedWaypoints.contains(bridge.pinWaypoint.invoke(pin));
+        } catch (ReflectiveOperationException e) {
+            LOGGER.warn("Cannot inspect Diorama waypoint pin", e);
+            return false;
+        }
+    }
+
     public static <T> List<T> visibleWorldWaypoints(List<T> waypoints) {
         if (ownedWaypoints.isEmpty()) {
             return waypoints;
