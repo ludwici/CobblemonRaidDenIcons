@@ -7,11 +7,13 @@ import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 public final class ModCompat {
     public static final boolean JOURNEYMAP_LOADED;
     public static final boolean XAERO_WORLD_MAP_LOADED;
+    public static final boolean DIORAMA_LOADED;
     public static final boolean MEGA_SHOWDOWN_LOADED;
 
     static {
         JOURNEYMAP_LOADED = Platform.isModLoaded("journeymap");
         XAERO_WORLD_MAP_LOADED = Platform.isModLoaded("xaeroworldmap");
+        DIORAMA_LOADED = Platform.isModLoaded("diorama");
         MEGA_SHOWDOWN_LOADED = Platform.isModLoaded("mega_showdown");
     }
 

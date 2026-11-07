@@ -3,6 +3,7 @@ package com.ludwici.cri.client;
 import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.network.RaidBossHolder;
+import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.block.RaidCrystalBlock;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -54,7 +55,7 @@ public final class RaidMarkerLifecycle {
         if (level == null || Minecraft.getInstance().level != level) {
             return;
         }
-        if (!ModCompat.JOURNEYMAP_LOADED && !ModCompat.XAERO_WORLD_MAP_LOADED) {
+        if (!ModCompat.JOURNEYMAP_LOADED && !ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.DIORAMA_LOADED) {
             return;
         }
         changeLevel(level);
@@ -143,13 +144,17 @@ public final class RaidMarkerLifecycle {
             if (level == null || trackedLevel != level) {
                 return;
             }
-            if (ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.JOURNEYMAP_LOADED && !XaeroMarkerManager.isReady()) {
+            if (ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.JOURNEYMAP_LOADED && !ModCompat.DIORAMA_LOADED && !XaeroMarkerManager.isReady()) {
                 return;
             }
             for (Map.Entry<BlockPos, MarkerEntry> tracked : entries.entrySet()) {
                 BlockPos pos = tracked.getKey();
                 MarkerEntry entry = tracked.getValue();
-                if (entry.active != null && ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.JOURNEYMAP_LOADED && !XaeroMarkerManager.isRegistered(pos)) {
+                if (entry.active != null && ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.JOURNEYMAP_LOADED && XaeroMarkerManager.isReady() && !XaeroMarkerManager.isRegistered(pos)) {
+                    MarkerDispatcher.unregister(pos);
+                    entry.active = null;
+                }
+                if (entry.active != null && ModCompat.DIORAMA_LOADED && DioramaMarkerManager.isReady() && !DioramaMarkerManager.isRegistered(pos)) {
                     MarkerDispatcher.unregister(pos);
                     entry.active = null;
                 }
@@ -260,7 +265,9 @@ public final class RaidMarkerLifecycle {
             holder = new RaidBossHolder(boss.getId(), boss.getType(), stars);
         }
         if (holder.equals(entry.active)) {
-            if (ModCompat.JOURNEYMAP_LOADED || !ModCompat.XAERO_WORLD_MAP_LOADED || !XaeroMarkerManager.isReady() || XaeroMarkerManager.isRegistered(pos)) {
+            boolean xaeroReady = ModCompat.JOURNEYMAP_LOADED || !ModCompat.XAERO_WORLD_MAP_LOADED || !XaeroMarkerManager.isReady() || XaeroMarkerManager.isRegistered(pos);
+            boolean dioramaReady = !ModCompat.DIORAMA_LOADED || !DioramaMarkerManager.isReady() || DioramaMarkerManager.isRegistered(pos);
+            if (xaeroReady && dioramaReady) {
                 return;
             }
         }

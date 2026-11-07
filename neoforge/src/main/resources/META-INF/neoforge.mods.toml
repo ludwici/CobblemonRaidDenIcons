@@ -9,7 +9,7 @@ version="${version}"
 displayName="Cobblemon Raid Dens Icons"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/cobblemon-raid-den-icons"
 authors="ludwici"
-description="Display Cobblemon Raid Dens icons on JourneyMap and Xaero maps."
+description="Display Cobblemon Raid Dens icons on JourneyMap, Xaero maps, and Diorama."
 logoFile="assets/cri/icon.png"
 
 [[mixins]]

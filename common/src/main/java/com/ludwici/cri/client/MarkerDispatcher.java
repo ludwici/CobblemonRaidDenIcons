@@ -2,6 +2,7 @@ package com.ludwici.cri.client;
 
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.network.RaidBossHolder;
+import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -12,9 +13,16 @@ public final class MarkerDispatcher {
     private MarkerDispatcher() {}
 
     public static boolean register(RaidCrystalBlockEntity blockEntity, Level level, RaidBossHolder holder) {
-        if (ModCompat.JOURNEYMAP_LOADED) return JourneyMarkerManager.registerMarker(blockEntity, level, holder);
-        if (ModCompat.XAERO_WORLD_MAP_LOADED) return XaeroMarkerManager.registerMarker(blockEntity, holder);
-        return false;
+        boolean registered = false;
+        if (ModCompat.JOURNEYMAP_LOADED) {
+            registered = JourneyMarkerManager.registerMarker(blockEntity, level, holder);
+        } else if (ModCompat.XAERO_WORLD_MAP_LOADED) {
+            registered = XaeroMarkerManager.registerMarker(blockEntity, holder);
+        }
+        if (ModCompat.DIORAMA_LOADED) {
+            registered = DioramaMarkerManager.registerMarker(blockEntity, level, holder) || registered;
+        }
+        return registered;
     }
 
     public static void unregister(BlockPos pos) {
@@ -22,6 +30,9 @@ public final class MarkerDispatcher {
             JourneyMarkerManager.unregisterMarker(pos);
         } else if (ModCompat.XAERO_WORLD_MAP_LOADED) {
             XaeroMarkerManager.unregisterMarker(pos);
+        }
+        if (ModCompat.DIORAMA_LOADED) {
+            DioramaMarkerManager.unregisterMarker(pos);
         }
     }
 }
