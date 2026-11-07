@@ -16,7 +16,9 @@
     "xaero.WaypointReaderMixin",
     "xaero.WaypointWorldRendererMixin",
     "xaero.XaeroWorldStateMixin",
-    "diorama.DioramaWaypointStoreMixin"
+    "diorama.DioramaWaypointStoreMixin",
+    "diorama.DioramaWaypointOverlayMixin",
+    "diorama.DioramaWaypointHudMixin"
   ],
   "mixins": [
     "InventoryServerAccessMixin"

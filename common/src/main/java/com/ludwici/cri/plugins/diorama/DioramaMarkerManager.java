@@ -12,14 +12,20 @@ import net.minecraft.world.level.Level;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 
 public final class DioramaMarkerManager {
     private static final Map<BlockPos, Marker> trackedMarkers = new HashMap<>();
+    private static final Set<Object> ownedWaypoints = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Set<Object> visibleOnMinimap = Collections.newSetFromMap(new IdentityHashMap<>());
     private static Api api;
     private static boolean attempted;
     private static boolean updating;
@@ -28,6 +34,59 @@ public final class DioramaMarkerManager {
 
     public static boolean isUpdating() {
         return updating;
+    }
+
+    public static void filterMinimapPins(List<?> pins) {
+        if (ownedWaypoints.isEmpty()) {
+            return;
+        }
+        Api bridge = api();
+        if (bridge == null) {
+            return;
+        }
+        Set<Object> visible = Collections.newSetFromMap(new IdentityHashMap<>());
+        try {
+            Iterator<?> iterator = pins.iterator();
+            while (iterator.hasNext()) {
+                Object pin = iterator.next();
+                Object waypoint = bridge.pinWaypoint.invoke(pin);
+                if (!ownedWaypoints.contains(waypoint)) {
+                    continue;
+                }
+                if ((boolean) bridge.pinClamped.invoke(pin)) {
+                    iterator.remove();
+                } else {
+                    visible.add(waypoint);
+                }
+            }
+            visibleOnMinimap.clear();
+            visibleOnMinimap.addAll(visible);
+        } catch (ReflectiveOperationException e) {
+            LOGGER.warn("Cannot filter Diorama minimap markers", e);
+            visibleOnMinimap.clear();
+        }
+    }
+
+    public static <T> List<T> visibleWorldWaypoints(List<T> waypoints) {
+        if (ownedWaypoints.isEmpty()) {
+            return waypoints;
+        }
+        boolean minimapActive = isMinimapEnabled();
+        return waypoints.stream().filter(waypoint -> !ownedWaypoints.contains(waypoint) || (minimapActive && visibleOnMinimap.contains(waypoint))).toList();
+    }
+
+    private static boolean isMinimapEnabled() {
+        Api bridge = api();
+        if (bridge == null) {
+            return false;
+        }
+        try {
+            Object settings = bridge.settingsGet.invoke(null);
+            return settings != null && bridge.minimapEnabled.getBoolean(settings) && bridge.waypointsOnMap.getBoolean(settings);
+        } catch (ReflectiveOperationException e) {
+            LOGGER.warn("Cannot read Diorama minimap settings", e);
+            return false;
+        }
     }
 
     public static boolean isReady() {
@@ -102,6 +161,7 @@ public final class DioramaMarkerManager {
             bridge.icon.set(waypoint, tera ? "cri:tera_raid" : "cri:raid_den");
             bridge.storeAdd.invoke(store, waypoint);
             trackedMarkers.put(pos.immutable(), new Marker(waypoint, store));
+            ownedWaypoints.add(waypoint);
             return true;
         } catch (ReflectiveOperationException e) {
             LOGGER.warn("Cannot add Diorama raid marker", e);
@@ -114,7 +174,12 @@ public final class DioramaMarkerManager {
     public static void unregisterMarker(BlockPos pos) {
         Marker marker = trackedMarkers.remove(pos);
         Api bridge = api();
-        if (marker == null || bridge == null) {
+        if (marker == null) {
+            return;
+        }
+        ownedWaypoints.remove(marker.waypoint());
+        visibleOnMinimap.remove(marker.waypoint());
+        if (bridge == null) {
             return;
         }
         boolean previous = updating;
@@ -130,6 +195,8 @@ public final class DioramaMarkerManager {
 
     public static void storeClosed() {
         trackedMarkers.clear();
+        ownedWaypoints.clear();
+        visibleOnMinimap.clear();
     }
 
     private static Api api() {
@@ -159,6 +226,11 @@ public final class DioramaMarkerManager {
         private final Field initials;
         private final Field icon;
         private final Object temporary;
+        private final Method pinWaypoint;
+        private final Method pinClamped;
+        private final Method settingsGet;
+        private final Field minimapEnabled;
+        private final Field waypointsOnMap;
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         private Api() throws ReflectiveOperationException {
@@ -173,6 +245,13 @@ public final class DioramaMarkerManager {
             this.initials = waypointClass.getField("initials");
             this.icon = waypointClass.getField("icon");
             this.temporary = Enum.valueOf((Class<Enum>) kind.getType().asSubclass(Enum.class), "TEMPORARY");
+            Class<?> pinClass = Class.forName("dev.diorama.waypoint.WaypointOverlay$Pin");
+            this.pinWaypoint = pinClass.getMethod("waypoint");
+            this.pinClamped = pinClass.getMethod("clamped");
+            Class<?> settingsClass = Class.forName("dev.diorama.Settings");
+            this.settingsGet = settingsClass.getMethod("get");
+            this.minimapEnabled = settingsClass.getField("minimap");
+            this.waypointsOnMap = settingsClass.getField("waypointsOnMap");
         }
     }
 }
