@@ -39,7 +39,7 @@ subprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
 
     base {
-        archivesName = "${rootProject.archives_base_name}-${project.name}-${rootProject.minecraft_version}"
+        archivesName = "${rootProject.archives_base_name}-${project.name}"
     }
 
     dependencies {
