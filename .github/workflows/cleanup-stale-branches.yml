@@ -1,0 +1,26 @@
+name: Remove obsolete CRDI branches
+
+on:
+  push:
+    branches: [ftb]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.event.head_commit.message == 'Add FTB Chunks waypoint integration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete obsolete fabric and neoforge branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          for branch in fabric neoforge; do
+            curl --fail-with-body --silent --show-error --request DELETE \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/git/refs/heads/$branch"
+            echo "Deleted $branch"
+          done

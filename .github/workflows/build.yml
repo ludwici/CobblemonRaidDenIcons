@@ -2,7 +2,7 @@ name: Build CRDI
 
 on:
   push:
-    branches: [main]
+    branches: [main, ftb]
   pull_request:
     branches: [main]
   workflow_dispatch:

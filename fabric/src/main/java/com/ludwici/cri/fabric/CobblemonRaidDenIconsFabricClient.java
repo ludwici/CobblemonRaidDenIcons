@@ -10,6 +10,7 @@ import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidIconAccessS2CPayload;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
+import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -24,6 +25,9 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
     @Override
     public void onInitializeClient() {
         ModCompat.init();
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            FtbMarkerManager.init();
+        }
 
         registerConfig();
         registerClientNetwork();

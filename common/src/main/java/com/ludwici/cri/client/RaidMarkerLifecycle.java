@@ -4,6 +4,7 @@ import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
+import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.block.RaidCrystalBlock;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -55,7 +56,7 @@ public final class RaidMarkerLifecycle {
         if (level == null || Minecraft.getInstance().level != level) {
             return;
         }
-        if (!ModCompat.JOURNEYMAP_LOADED && !ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.DIORAMA_LOADED) {
+        if (!ModCompat.JOURNEYMAP_LOADED && !ModCompat.XAERO_WORLD_MAP_LOADED && !ModCompat.DIORAMA_LOADED && !ModCompat.FTB_CHUNKS_LOADED) {
             return;
         }
         changeLevel(level);
@@ -158,6 +159,10 @@ public final class RaidMarkerLifecycle {
                     MarkerDispatcher.unregister(pos);
                     entry.active = null;
                 }
+                if (entry.active != null && ModCompat.FTB_CHUNKS_LOADED && FtbMarkerManager.isReady() && !FtbMarkerManager.isRegistered(pos)) {
+                    MarkerDispatcher.unregister(pos);
+                    entry.active = null;
+                }
                 update(level, pos, entry);
                 if (serverAccess && !entry.refreshRequested) {
                     entry.refreshRequested = CriPlatform.requestRefresh(pos);
@@ -205,6 +210,9 @@ public final class RaidMarkerLifecycle {
         }
         entries.clear();
         trackedLevel = level;
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            FtbMarkerManager.levelChanged();
+        }
         if (level == null) {
             serverAccess = false;
         }
@@ -267,7 +275,8 @@ public final class RaidMarkerLifecycle {
         if (holder.equals(entry.active)) {
             boolean xaeroReady = ModCompat.JOURNEYMAP_LOADED || !ModCompat.XAERO_WORLD_MAP_LOADED || !XaeroMarkerManager.isReady() || XaeroMarkerManager.isRegistered(pos);
             boolean dioramaReady = !ModCompat.DIORAMA_LOADED || !DioramaMarkerManager.isReady() || DioramaMarkerManager.isRegistered(pos);
-            if (xaeroReady && dioramaReady) {
+            boolean ftbReady = !ModCompat.FTB_CHUNKS_LOADED || !FtbMarkerManager.isReady() || FtbMarkerManager.isRegistered(pos);
+            if (xaeroReady && dioramaReady && ftbReady) {
                 return;
             }
         }
