@@ -28,11 +28,6 @@ public abstract class DioramaWaypointStoreMixin {
         }
     }
 
-    @Inject(method = "mapChanged", at = @At("TAIL"), remap = false)
-    private static void cri$mapChanged(String dimension, CallbackInfo ci) {
-        RaidMarkerLifecycle.markerApiReady();
-    }
-
     @Inject(method = "onLeave", at = @At("TAIL"), remap = false)
     private static void cri$onLeave(CallbackInfo ci) {
         cri$lastStore = null;

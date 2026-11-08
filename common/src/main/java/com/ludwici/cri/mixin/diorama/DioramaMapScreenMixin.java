@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Pseudo
 @Mixin(targets = "dev.diorama.MapScreen", remap = false)
 public abstract class DioramaMapScreenMixin {
-    @ModifyArgs(method = {"render", "method_25394"}, at = @At(value = "INVOKE", target = "Ldev/diorama/waypoint/WaypointOverlay;draw"), remap = false)
+    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Ldev/diorama/waypoint/WaypointOverlay;draw(Lnet/minecraft/client/gui/GuiGraphics;Ldev/diorama/render/MapViewport$View;Ljava/util/List;ZLdev/diorama/waypoint/WaypointOverlay$Pin;)V", remap = false), remap = false, require = 0)
     private void cri$hideDuplicateRaidTooltip(Args args) {
         if (DioramaMarkerManager.isRaidPin(args.get(4))) {
-            args.set(3, false);
+            args.set(4, null);
         }
     }
 }

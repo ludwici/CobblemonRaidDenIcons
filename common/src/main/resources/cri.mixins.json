@@ -17,6 +17,7 @@
     "xaero.WaypointWorldRendererMixin",
     "xaero.XaeroWorldStateMixin",
     "diorama.DioramaWaypointStoreMixin",
+    "diorama.DioramaWaypointStoreModernMixin",
     "diorama.DioramaWaypointOverlayMixin",
     "diorama.DioramaWaypointHudMixin",
     "diorama.DioramaMapScreenMixin"
@@ -26,5 +27,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "com.ludwici.cri.mixin.diorama.DioramaMixinPlugin"
 }

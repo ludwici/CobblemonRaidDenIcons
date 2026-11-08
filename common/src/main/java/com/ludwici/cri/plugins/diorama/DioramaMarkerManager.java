@@ -150,9 +150,11 @@ public final class DioramaMarkerManager {
             int color = 0xFF000000 | holder.raidType().getColor();
             Object waypoint = bridge.constructor.newInstance(title, pos.getX(), pos.getY(), pos.getZ(), level.dimension().location().toString(), color);
             bridge.kind.set(waypoint, bridge.temporary);
-            bridge.initials.set(waypoint, "R");
             boolean tera = ("tera".equalsIgnoreCase(boss.getFeature()) || holder.raidType() == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
-            bridge.icon.set(waypoint, tera ? "cri:tera_raid" : "cri:raid_den");
+            bridge.initials.set(waypoint, tera ? "T" : "R");
+            if (bridge.icon != null) {
+                bridge.icon.set(waypoint, tera ? "cri:tera_raid" : "cri:raid_den");
+            }
             bridge.storeAdd.invoke(store, waypoint);
             trackedMarkers.put(pos.immutable(), new Marker(waypoint, store));
             ownedWaypoints.add(waypoint);
@@ -232,7 +234,13 @@ public final class DioramaMarkerManager {
             this.constructor = waypointClass.getConstructor(String.class, int.class, int.class, int.class, String.class, int.class);
             this.kind = waypointClass.getField("kind");
             this.initials = waypointClass.getField("initials");
-            this.icon = waypointClass.getField("icon");
+            Field iconField;
+            try {
+                iconField = waypointClass.getField("icon");
+            } catch (NoSuchFieldException ignored) {
+                iconField = null;
+            }
+            this.icon = iconField;
             this.temporary = Enum.valueOf((Class<Enum>) kind.getType().asSubclass(Enum.class), "TEMPORARY");
             Class<?> pinClass = Class.forName("dev.diorama.waypoint.WaypointOverlay$Pin");
             this.pinWaypoint = pinClass.getMethod("waypoint");
