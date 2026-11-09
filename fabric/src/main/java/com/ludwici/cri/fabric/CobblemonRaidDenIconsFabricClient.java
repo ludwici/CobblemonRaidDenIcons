@@ -11,6 +11,7 @@ import com.ludwici.cri.network.RaidBlockSpawnS2CPayload;
 import com.ludwici.cri.network.RaidIconAccessS2CPayload;
 import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
+import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -51,11 +52,21 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
                     ConfigEntry.BoundedDiscrete.class
             );
         }
+        if (!ModCompat.DIORAMA_LOADED) {
+            AutoConfig.getGuiRegistry(ModConfig.class).registerPredicateProvider(
+                    (i18n, field, config, defaults, registry) -> List.of(),
+                    field -> field.getName().equals("dioramaIconStyle")
+            );
+        }
         CriConfig.setIconSizeSupplier(() -> ModConfig.get().iconSize);
         CriConfig.setTeraIconSizeSupplier(() -> ModConfig.get().teraIconSize);
+        CriConfig.setDioramaIconStyleSupplier(() -> ModConfig.get().dioramaIconStyle);
         AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((holder, config) -> {
             if (ModCompat.JOURNEYMAP_LOADED) {
                 JourneyMarkerManager.refreshIconSizes(config.iconSize, config.teraIconSize);
+            }
+            if (ModCompat.DIORAMA_LOADED) {
+                DioramaMarkerManager.refreshIconStyle();
             }
             return InteractionResult.PASS;
         });

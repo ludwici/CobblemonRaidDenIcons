@@ -25,6 +25,7 @@ public final class CobblemonRaidDenIconsNeoForge {
         container.registerConfig(CLIENT, NeoConfig.SPEC);
         CriConfig.setIconSizeSupplier(NeoConfig::iconSize);
         CriConfig.setTeraIconSizeSupplier(NeoConfig::teraIconSize);
+        CriConfig.setDioramaIconStyleSupplier(NeoConfig::dioramaIconStyle);
         modBus.addListener(NeoPayloads::register);
         RaidIconServerAccess.installSender((player, payload) -> {
             if (!NetworkRegistry.hasChannel(player.connection.getConnection(), null, RaidIconAccessS2CPayload.PAYLOAD_ID)) {

@@ -13,3 +13,39 @@ dependencies {
     modCompileOnlyApi "xaero.map:xaeroworldmap-fabric-${rootProject.xaero_map_version}"
     modCompileOnlyApi "xaero.minimap:xaerominimap-fabric-${rootProject.xaero_minimap_version}"
 }
+
+
+def generatedDioramaIcons = layout.buildDirectory.dir("generated/resources/diorama-icons")
+
+tasks.register("generateDioramaTypeIcons") {
+    outputs.dir(generatedDioramaIcons)
+    doLast {
+        def atlas = null
+        configurations.compileClasspath.files.each { file ->
+            if (atlas == null && file.isFile() && file.name.endsWith(".jar")) {
+                new java.util.zip.ZipFile(file).withCloseable { jar ->
+                    def entry = jar.getEntry("assets/cobblemon/textures/gui/types.png")
+                    if (entry != null) {
+                        jar.getInputStream(entry).withCloseable { stream ->
+                            atlas = javax.imageio.ImageIO.read(stream)
+                        }
+                    }
+                }
+            }
+        }
+        if (atlas == null || atlas.width != 648 || atlas.height != 36) {
+            throw new GradleException("Cobblemon's 648x36 type icon atlas was not found in the compile classpath")
+        }
+        def directory = new File(generatedDioramaIcons.get().asFile, "assets/cri/textures/waypoint_icons")
+        directory.mkdirs()
+        (0..<18).each { index ->
+            def image = atlas.getSubimage(index * 36, 0, 36, 36)
+            javax.imageio.ImageIO.write(image, "png", new File(directory, "type_${index}.png"))
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir(generatedDioramaIcons)
+tasks.named("processResources") {
+    dependsOn("generateDioramaTypeIcons")
+}

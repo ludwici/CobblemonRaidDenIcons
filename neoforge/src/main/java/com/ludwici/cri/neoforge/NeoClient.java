@@ -3,6 +3,7 @@ package com.ludwici.cri.neoforge;
 import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
+import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -24,10 +25,15 @@ public final class NeoClient {
             FtbMarkerManager.init();
         }
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) ->
-                new ConfigurationScreen(modContainer, parent,
-                        (context, key, original) -> ModCompat.MEGA_SHOWDOWN_LOADED || !key.equals("teraIconSize")
-                                ? original
-                                : null));
+                new ConfigurationScreen(modContainer, parent, (context, key, original) -> {
+                    if (!ModCompat.MEGA_SHOWDOWN_LOADED && key.equals("teraIconSize")) {
+                        return null;
+                    }
+                    if (!ModCompat.DIORAMA_LOADED && key.equals("dioramaIconStyle")) {
+                        return null;
+                    }
+                    return original;
+                }));
         modEventBus.addListener(NeoClient::onConfigReload);
         CriPlatform.installRefreshRequester(pos -> {
             var connection = Minecraft.getInstance().getConnection();
@@ -46,6 +52,9 @@ public final class NeoClient {
 
         if (ModCompat.JOURNEYMAP_LOADED) {
             JourneyMarkerManager.refreshIconSizes(NeoConfig.iconSize(), NeoConfig.teraIconSize());
+        }
+        if (ModCompat.DIORAMA_LOADED) {
+            DioramaMarkerManager.refreshIconStyle();
         }
     }
 }

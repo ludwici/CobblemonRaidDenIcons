@@ -2,6 +2,9 @@ package com.ludwici.cri.plugins.diorama;
 
 import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.ModCompat;
+import com.ludwici.cri.config.CriConfig;
+import com.ludwici.cri.config.DioramaIconStyle;
+import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
@@ -153,10 +156,10 @@ public final class DioramaMarkerManager {
             boolean tera = ("tera".equalsIgnoreCase(boss.getFeature()) || holder.raidType() == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
             bridge.initials.set(waypoint, holder.adventure() ? "A" : tera ? "T" : "R");
             if (bridge.icon != null) {
-                bridge.icon.set(waypoint, tera ? "cri:tera_raid" : "cri:raid_den");
+                bridge.icon.set(waypoint, iconId(holder, tera));
             }
             bridge.storeAdd.invoke(store, waypoint);
-            trackedMarkers.put(pos.immutable(), new Marker(waypoint, store));
+            trackedMarkers.put(pos.immutable(), new Marker(waypoint, store, holder, tera));
             ownedWaypoints.add(waypoint);
             return true;
         } catch (ReflectiveOperationException e) {
@@ -165,6 +168,29 @@ public final class DioramaMarkerManager {
         } finally {
             updating = previous;
         }
+    }
+
+    public static void refreshIconStyle() {
+        Api bridge = api();
+        if (bridge == null || bridge.icon == null) {
+            return;
+        }
+        for (Marker marker : trackedMarkers.values()) {
+            try {
+                bridge.icon.set(marker.waypoint(), iconId(marker.holder(), marker.tera()));
+            } catch (IllegalAccessException e) {
+                LOGGER.warn("Cannot update Diorama raid marker icon style", e);
+                return;
+            }
+        }
+    }
+
+    private static String iconId(RaidBossHolder holder, boolean tera) {
+        RaidType type = holder.raidType();
+        if (CriConfig.dioramaIconStyle() == DioramaIconStyle.TYPE_ICONS && type != RaidType.STELLAR && type != RaidType.NONE) {
+            return "cri:type_" + ElementalTypes.get(type.name()).getTextureXMultiplier();
+        }
+        return tera ? "cri:tera_raid" : "cri:raid_den";
     }
 
     public static void unregisterMarker(BlockPos pos) {
@@ -208,7 +234,7 @@ public final class DioramaMarkerManager {
         return api;
     }
 
-    private record Marker(Object waypoint, Object store) {}
+    private record Marker(Object waypoint, Object store, RaidBossHolder holder, boolean tera) {}
 
     private static final class Api {
         private final Method storeGet;
