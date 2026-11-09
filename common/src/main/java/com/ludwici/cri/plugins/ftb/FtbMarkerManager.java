@@ -9,8 +9,8 @@ import dev.ftb.mods.ftbchunks.api.client.event.WaypointManagerEvent;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.Waypoint;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.WaypointManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 public final class FtbMarkerManager {
     private static final Map<BlockPos, Marker> trackedMarkers = new HashMap<>();
     private static WaypointManager manager;
-    private static ResourceKey<Level> dimension;
+    private static ClientLevel managerLevel;
     private static boolean listening;
 
     private FtbMarkerManager() {}
@@ -45,27 +45,29 @@ public final class FtbMarkerManager {
             minecraft.execute(() -> managerAvailable(available));
             return;
         }
-        if (minecraft.level == null) {
+        ClientLevel level = minecraft.level;
+        if (level == null) {
             return;
         }
-        ResourceKey<Level> newDimension = minecraft.level.dimension();
-        if (manager == available && newDimension.equals(dimension)) {
+        if (manager == available && managerLevel == level) {
             return;
         }
         trackedMarkers.clear();
         manager = available;
-        dimension = newDimension;
+        managerLevel = level;
         RaidMarkerLifecycle.markerApiReady();
     }
 
-    public static void levelChanged() {
+    public static void levelChanged(ClientLevel level) {
         trackedMarkers.clear();
-        manager = null;
-        dimension = null;
+        if (managerLevel != level) {
+            manager = null;
+            managerLevel = null;
+        }
     }
 
     public static boolean isReady() {
-        return manager != null && Minecraft.getInstance().level != null && Minecraft.getInstance().level.dimension().equals(dimension);
+        return manager != null && managerLevel != null && Minecraft.getInstance().level == managerLevel;
     }
 
     public static boolean isRegistered(BlockPos pos) {

@@ -211,7 +211,7 @@ public final class RaidMarkerLifecycle {
         entries.clear();
         trackedLevel = level;
         if (ModCompat.FTB_CHUNKS_LOADED) {
-            FtbMarkerManager.levelChanged();
+            FtbMarkerManager.levelChanged(level);
         }
         if (level == null) {
             serverAccess = false;
