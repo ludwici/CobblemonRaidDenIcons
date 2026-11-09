@@ -7,5 +7,10 @@
   "cri.marker.detailed": "%s (%s, %s)",
   "text.autoconfig.cri.option.dioramaIconStyle": "アイコンスタイル",
   "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "標準",
-  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "タイプアイコン"
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "タイプアイコン",
+  "text.autoconfig.cri.option.ftbIconStyle": "アイコンスタイル",
+  "text.autoconfig.cri.enum.iconStyle.DEFAULT": "標準",
+  "text.autoconfig.cri.enum.iconStyle.TYPE_ICONS": "タイプアイコン",
+  "text.autoconfig.cri.option.dioramaIconStyle.@PrefixText": "Diorama",
+  "text.autoconfig.cri.option.ftbIconStyle.@PrefixText": "FTB Chunks"
 }
