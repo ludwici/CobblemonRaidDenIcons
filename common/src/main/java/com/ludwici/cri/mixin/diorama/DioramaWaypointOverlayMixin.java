@@ -1,5 +1,6 @@
 package com.ludwici.cri.mixin.diorama;
 
+import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -15,7 +16,7 @@ import java.util.List;
 public abstract class DioramaWaypointOverlayMixin {
     @Inject(method = "layout", at = @At("RETURN"), remap = false)
     private static void cri$hideDistantMinimapPins(@Coerce Object view, List<?> waypoints, boolean fullscreen, CallbackInfoReturnable<List<?>> cir) {
-        if (!fullscreen) {
+        if (!fullscreen || ModCompat.SMART_ROTOM_DIORAMA_040) {
             DioramaMarkerManager.filterMinimapPins(cir.getReturnValue());
         }
     }

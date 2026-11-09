@@ -83,16 +83,26 @@ publishMods {
         requires("architectury-api")
         requires("fabric-api")
         requires("fabric-language-kotlin")
+        optional("xaeros-minimap")
+        optional("xaeros-world-map")
+        optional("journeymap")
+        optional("diorama")
     }
 
     modrinth {
         projectId = "Ou0WNFNa"
         accessToken = providers.environmentVariable("MODRINTH_TOKEN").orElse(providers.gradleProperty("MODRINTH_TOKEN"))
+        version = rootProject.mod_version
+        displayName = "Cobblemon Raid Dens Icons ${rootProject.mod_version}"
         minecraftVersions.add(rootProject.minecraft_version)
         requires("cobblemon")
         requires("cobblemonraiddens")
         requires("architectury-api")
         requires("fabric-api")
         requires("fabric-language-kotlin")
+        optional("xaeros-minimap")
+        optional("xaeros-world-map")
+        optional("journeymap")
+        optional("diorama-map")
     }
 }

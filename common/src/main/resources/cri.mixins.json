@@ -19,6 +19,7 @@
     "diorama.DioramaWaypointStoreMixin",
     "diorama.DioramaWaypointStoreModernMixin",
     "diorama.DioramaWaypointOverlayMixin",
+    "diorama.DioramaSmartRotomMapLabelsMixin",
     "diorama.DioramaWaypointHudMixin",
     "diorama.DioramaMapScreenMixin",
     "diorama.SmartRotomCompactWaypointHudMixin"
