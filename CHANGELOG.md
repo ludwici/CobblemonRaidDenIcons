@@ -6,6 +6,7 @@
 - Added waypoint integration for FTB Chunks 2101.1.10+.
 - Fixed FTB Chunks raid markers missing from the full-screen map.
 - Added configurable Diorama raid icon styles: classic markers or Pokémon type icons.
+- Changed the icon style selector to a cycling button and expanded Russian raid type names.
 - Added translations for 16 additional languages.
 - Updated required dependencies to include Asymmetric Battles API 1.4.0.
 

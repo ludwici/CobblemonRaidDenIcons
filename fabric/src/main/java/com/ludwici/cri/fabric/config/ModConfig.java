@@ -17,6 +17,7 @@ public final class ModConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = ConfigConstants.MIN_ICON_SIZE, max = ConfigConstants.MAX_TERA_ICON_SIZE)
     public int teraIconSize = ConfigConstants.DEFAULT_TERA_ICON_SIZE;
 
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public DioramaIconStyle dioramaIconStyle = DioramaIconStyle.DEFAULT;
 
     public static ModConfig get() {
