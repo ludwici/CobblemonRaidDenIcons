@@ -1,5 +1,6 @@
 package com.ludwici.cri.mixin.xaero;
 
+import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerApi;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -47,7 +48,7 @@ public abstract class WaypointRendererMixin extends MapElementRenderer<Waypoint,
                 PoseStack matrixStack = guiGraphics.pose();
                 matrixStack.pushPose();
                 try {
-                    String name = String.format("%s (%s)", boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars());
+                    String name = RaidMarkerTexts.title(boss.getDisplaySpecies().getTranslatedName(), holder.adventure(), holder.stars());
                     Font fontRenderer = Minecraft.getInstance().font;
                     int len = fontRenderer.width(name);
                     float tooltipY = -(XaeroMarkerApi.getIconSize(holder) / 2F + 20F);

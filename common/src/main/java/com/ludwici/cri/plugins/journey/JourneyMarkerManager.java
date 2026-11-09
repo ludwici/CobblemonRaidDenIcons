@@ -2,6 +2,7 @@ package com.ludwici.cri.plugins.journey;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
+import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.config.CriConfig;
 import com.ludwici.cri.network.RaidBossHolder;
@@ -82,7 +83,7 @@ public class JourneyMarkerManager {
 
         MarkerOverlay marker = new MarkerOverlay(MODID, pos, typeIcon);
         marker.setDimension(world.dimension());
-        marker.setTitle(String.format("%s (%s)", holder.adventure() ? "Adventure: " + boss.getDisplaySpecies().getTranslatedName().getString() : boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars()));
+        marker.setTitle(RaidMarkerTexts.title(boss.getDisplaySpecies().getTranslatedName(), holder.adventure(), holder.stars()));
         try {
             jmApi.show(marker);
             trackedMarkers.put(posStr, marker);
