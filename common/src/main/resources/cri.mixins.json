@@ -20,7 +20,8 @@
     "diorama.DioramaWaypointStoreModernMixin",
     "diorama.DioramaWaypointOverlayMixin",
     "diorama.DioramaWaypointHudMixin",
-    "diorama.DioramaMapScreenMixin"
+    "diorama.DioramaMapScreenMixin",
+    "diorama.SmartRotomCompactWaypointHudMixin"
   ],
   "mixins": [
     "InventoryServerAccessMixin"

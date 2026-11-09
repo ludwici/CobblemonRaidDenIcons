@@ -146,7 +146,8 @@ public final class DioramaMarkerManager {
             unregisterMarker(pos);
             String name = boss.getDisplaySpecies().getTranslatedName().getString();
             String type = holder.raidType().getSerializedName();
-            String title = name + " (" + type + ", " + holder.stars() + ")";
+            String stars = ModCompat.SMART_ROTOM_DIORAMA_040 ? holder.stars().replace('★', '*') : holder.stars();
+            String title = name + " (" + type + ", " + stars + ")";
             int color = 0xFF000000 | holder.raidType().getColor();
             Object waypoint = bridge.constructor.newInstance(title, pos.getX(), pos.getY(), pos.getZ(), level.dimension().location().toString(), color);
             bridge.kind.set(waypoint, bridge.temporary);
