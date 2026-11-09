@@ -32,6 +32,9 @@ public final class NeoClient {
                     if (!ModCompat.DIORAMA_LOADED && key.equals("dioramaIconStyle")) {
                         return null;
                     }
+                    if (!ModCompat.FTB_CHUNKS_LOADED && key.equals("ftbIconStyle")) {
+                        return null;
+                    }
                     return original;
                 }));
         modEventBus.addListener(NeoClient::onConfigReload);
@@ -55,6 +58,9 @@ public final class NeoClient {
         }
         if (ModCompat.DIORAMA_LOADED) {
             DioramaMarkerManager.refreshIconStyle();
+        }
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            FtbMarkerManager.refreshIconStyle();
         }
     }
 }

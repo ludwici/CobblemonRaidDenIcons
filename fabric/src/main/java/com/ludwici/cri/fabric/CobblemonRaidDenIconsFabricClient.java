@@ -58,15 +58,25 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
                     field -> field.getName().equals("dioramaIconStyle")
             );
         }
+        if (!ModCompat.FTB_CHUNKS_LOADED) {
+            AutoConfig.getGuiRegistry(ModConfig.class).registerPredicateProvider(
+                    (i18n, field, config, defaults, registry) -> List.of(),
+                    field -> field.getName().equals("ftbIconStyle")
+            );
+        }
         CriConfig.setIconSizeSupplier(() -> ModConfig.get().iconSize);
         CriConfig.setTeraIconSizeSupplier(() -> ModConfig.get().teraIconSize);
         CriConfig.setDioramaIconStyleSupplier(() -> ModConfig.get().dioramaIconStyle);
+        CriConfig.setFtbIconStyleSupplier(() -> ModConfig.get().ftbIconStyle);
         AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((holder, config) -> {
             if (ModCompat.JOURNEYMAP_LOADED) {
                 JourneyMarkerManager.refreshIconSizes(config.iconSize, config.teraIconSize);
             }
             if (ModCompat.DIORAMA_LOADED) {
                 DioramaMarkerManager.refreshIconStyle();
+            }
+            if (ModCompat.FTB_CHUNKS_LOADED) {
+                FtbMarkerManager.refreshIconStyle();
             }
             return InteractionResult.PASS;
         });

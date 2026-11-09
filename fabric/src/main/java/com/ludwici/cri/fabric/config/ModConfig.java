@@ -1,7 +1,7 @@
 package com.ludwici.cri.fabric.config;
 
 import com.ludwici.cri.config.ConfigConstants;
-import com.ludwici.cri.config.DioramaIconStyle;
+import com.ludwici.cri.config.MapIconStyle;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -17,8 +17,13 @@ public final class ModConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = ConfigConstants.MIN_ICON_SIZE, max = ConfigConstants.MAX_TERA_ICON_SIZE)
     public int teraIconSize = ConfigConstants.DEFAULT_TERA_ICON_SIZE;
 
+    @ConfigEntry.Gui.PrefixText
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public DioramaIconStyle dioramaIconStyle = DioramaIconStyle.DEFAULT;
+    public MapIconStyle dioramaIconStyle = MapIconStyle.DEFAULT;
+
+    @ConfigEntry.Gui.PrefixText
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public MapIconStyle ftbIconStyle = MapIconStyle.DEFAULT;
 
     public static ModConfig get() {
         return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
@@ -29,7 +34,10 @@ public final class ModConfig implements ConfigData {
         iconSize = Math.clamp(iconSize, ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_ICON_SIZE);
         teraIconSize = Math.clamp(teraIconSize, ConfigConstants.MIN_ICON_SIZE, ConfigConstants.MAX_TERA_ICON_SIZE);
         if (dioramaIconStyle == null) {
-            dioramaIconStyle = DioramaIconStyle.DEFAULT;
+            dioramaIconStyle = MapIconStyle.DEFAULT;
+        }
+        if (ftbIconStyle == null) {
+            ftbIconStyle = MapIconStyle.DEFAULT;
         }
     }
 }
