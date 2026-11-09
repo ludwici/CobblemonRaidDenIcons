@@ -3,6 +3,7 @@ package com.ludwici.cri.client;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
+import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
 import com.ludwici.cri.plugins.journey.JourneyMarkerManager;
 import com.ludwici.cri.plugins.xaero.XaeroMarkerManager;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -22,6 +23,9 @@ public final class MarkerDispatcher {
         if (ModCompat.DIORAMA_LOADED) {
             registered = DioramaMarkerManager.registerMarker(blockEntity, level, holder) || registered;
         }
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            registered = FtbMarkerManager.registerMarker(blockEntity, level, holder) || registered;
+        }
         return registered;
     }
 
@@ -33,6 +37,9 @@ public final class MarkerDispatcher {
         }
         if (ModCompat.DIORAMA_LOADED) {
             DioramaMarkerManager.unregisterMarker(pos);
+        }
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            FtbMarkerManager.unregisterMarker(pos);
         }
     }
 }

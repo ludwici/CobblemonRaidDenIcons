@@ -2,6 +2,7 @@ package com.ludwici.cri.neoforge;
 
 import com.ludwici.cri.CriPlatform;
 import com.ludwici.cri.ModCompat;
+import com.ludwici.cri.plugins.ftb.FtbMarkerManager;
 import com.ludwici.cri.network.RaidBlockRefreshC2SPayload;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -19,6 +20,9 @@ public final class NeoClient {
     }
 
     public static void init(IEventBus modEventBus, ModContainer container) {
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            FtbMarkerManager.init();
+        }
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) ->
                 new ConfigurationScreen(modContainer, parent,
                         (context, key, original) -> ModCompat.MEGA_SHOWDOWN_LOADED || !key.equals("teraIconSize")

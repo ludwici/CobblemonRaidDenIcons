@@ -3,7 +3,7 @@
   "id": "cri",
   "version": "${version}",
   "name": "Cobblemon Raid Dens Icons",
-  "description": "Display Cobblemon Raid Dens icons on JourneyMap, Xaero maps, and Diorama.",
+  "description": "Display Cobblemon Raid Dens icons on JourneyMap, Xaero maps, Diorama, and FTB Chunks.",
   "authors": [
     "ludwici"
   ],
