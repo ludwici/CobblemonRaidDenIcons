@@ -48,6 +48,13 @@ side="BOTH"
 [[dependencies.cri]]
 modId="cobblemonraiddens"
 type="required"
-versionRange="[0.13.5,)"
+versionRange="[0.14.1,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.cri]]
+modId="asymmetricbattles"
+type="required"
+versionRange="[1.4.0,)"
 ordering="AFTER"
 side="BOTH"

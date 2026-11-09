@@ -19,9 +19,11 @@ public final class CobblemonRaidDenIcons {
     public static void init() {
         RaidEvents.RAID_DEN_SPAWN.subscribe(event -> {
             BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getBlockPos());
-            if (!(blockEntity instanceof RaidCrystalBlockEntity)) return;
+            if (!(blockEntity instanceof RaidCrystalBlockEntity)) {
+                return;
+            }
 
-            var raidBoss = event.getRaidBoss();
+            var raidBoss = event.getRaid();
             String stars;
             try {
                 stars = raidBoss.getTier().getStars();
@@ -29,7 +31,7 @@ public final class CobblemonRaidDenIcons {
                 stars = "";
             }
 
-            var holder = new RaidBossHolder(raidBoss.getId(), raidBoss.getType(), stars);
+            var holder = new RaidBossHolder(raidBoss.getId(), raidBoss.getType(), stars, raidBoss.isAdventure());
             CriPlatform.sendSpawn(event.getLevel(), blockEntity, new RaidBlockSpawnS2CPayload(event.getBlockPos(), holder));
         });
     }

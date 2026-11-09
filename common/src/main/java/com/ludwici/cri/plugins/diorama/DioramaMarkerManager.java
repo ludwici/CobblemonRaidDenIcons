@@ -1,5 +1,6 @@
 package com.ludwici.cri.plugins.diorama;
 
+import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -144,15 +145,13 @@ public final class DioramaMarkerManager {
             }
             BlockPos pos = blockEntity.getBlockPos();
             unregisterMarker(pos);
-            String name = boss.getDisplaySpecies().getTranslatedName().getString();
-            String type = holder.raidType().getSerializedName();
             String stars = ModCompat.SMART_ROTOM_DIORAMA_040 ? holder.stars().replace('★', '*') : holder.stars();
-            String title = name + " (" + type + ", " + stars + ")";
+            String title = RaidMarkerTexts.detailedTitle(boss.getDisplaySpecies().getTranslatedName(), holder.adventure(), holder.raidType(), stars);
             int color = 0xFF000000 | holder.raidType().getColor();
             Object waypoint = bridge.constructor.newInstance(title, pos.getX(), pos.getY(), pos.getZ(), level.dimension().location().toString(), color);
             bridge.kind.set(waypoint, bridge.temporary);
             boolean tera = ("tera".equalsIgnoreCase(boss.getFeature()) || holder.raidType() == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
-            bridge.initials.set(waypoint, tera ? "T" : "R");
+            bridge.initials.set(waypoint, holder.adventure() ? "A" : tera ? "T" : "R");
             if (bridge.icon != null) {
                 bridge.icon.set(waypoint, tera ? "cri:tera_raid" : "cri:raid_den");
             }

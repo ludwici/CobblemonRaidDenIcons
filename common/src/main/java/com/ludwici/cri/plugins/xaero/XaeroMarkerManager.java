@@ -1,5 +1,6 @@
 package com.ludwici.cri.plugins.xaero;
 
+import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.CobblemonRaidDenIcons;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -52,7 +53,7 @@ public class XaeroMarkerManager {
             return false;
         }
         var boss = ClientRaidRegistry.getRaidBoss(marker.holder().bossId());
-        if (boss == null || !marker.waypoint().getName().equals(boss.getDisplaySpecies().getTranslatedName().getString())) {
+        if (boss == null || !marker.waypoint().getName().equals(RaidMarkerTexts.displayName(boss.getDisplaySpecies().getTranslatedName(), marker.holder().adventure()))) {
             return false;
         }
         for (Waypoint waypoint : currentSet.getWaypoints()) {
@@ -86,7 +87,7 @@ public class XaeroMarkerManager {
             }
         }
 
-        Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), boss.getDisplaySpecies().getTranslatedName().getString(), "S", WaypointColor.AQUA);
+        Waypoint waypoint = new Waypoint(pos.getX(), pos.getY(), pos.getZ(), RaidMarkerTexts.displayName(boss.getDisplaySpecies().getTranslatedName(), holder.adventure()), holder.adventure() ? "A" : "S", WaypointColor.AQUA);
         waypoint.setTemporary(true);
         waypoint.setThirdPartyOrigin(ORIGIN);
         set.add(waypoint);

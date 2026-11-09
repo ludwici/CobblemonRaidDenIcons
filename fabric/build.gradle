@@ -80,6 +80,7 @@ publishMods {
         server = true
         requires("cobblemon")
         requires("cobblemonraiddens")
+        requires("asymmetric-battles-api")
         requires("architectury-api")
         requires("fabric-api")
         requires("fabric-language-kotlin")
@@ -97,6 +98,7 @@ publishMods {
         minecraftVersions.add(rootProject.minecraft_version)
         requires("cobblemon")
         requires("cobblemonraiddens")
+        requires("asymmetric-battles-api")
         requires("architectury-api")
         requires("fabric-api")
         requires("fabric-language-kotlin")
