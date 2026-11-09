@@ -84,4 +84,13 @@ publishMods {
         requires("cobblemonraiddens")
         requires("architectury-api")
     }
+
+    modrinth {
+        projectId = "Ou0WNFNa"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN").orElse(providers.gradleProperty("MODRINTH_TOKEN"))
+        minecraftVersions.add(rootProject.minecraft_version)
+        requires("cobblemon")
+        requires("cobblemonraiddens")
+        requires("architectury-api")
+    }
 }

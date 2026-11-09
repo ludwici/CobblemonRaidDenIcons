@@ -1,19 +1,14 @@
-name: Publish CurseForge
+name: Publish CurseForge and Modrinth
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/publish.yml'
 
 permissions:
   contents: read
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Publish 1.10.0 to CurseForge'
-    name: Publish ${{ matrix.loader }} 1.10.0
+    name: Publish ${{ matrix.loader }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,11 +21,13 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Check CurseForge token
+      - name: Check publishing tokens
         env:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: test -n "$CURSEFORGE_TOKEN"
-      - name: Publish to CurseForge
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: test -n "$CURSEFORGE_TOKEN" && test -n "$MODRINTH_TOKEN"
+      - name: Publish to CurseForge and Modrinth
         env:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: ./gradlew :${{ matrix.loader }}:publishMods --no-daemon --stacktrace
