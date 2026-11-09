@@ -8,19 +8,24 @@ import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import dev.ftb.mods.ftbchunks.api.client.event.WaypointManagerEvent;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.Waypoint;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.WaypointManager;
+import dev.ftb.mods.ftbchunks.client.gui.LargeMapScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 
 public final class FtbMarkerManager {
     private static final Map<BlockPos, Marker> trackedMarkers = new HashMap<>();
+    private static final Set<Object> ownedIcons = Collections.newSetFromMap(new IdentityHashMap<>());
     private static WaypointManager manager;
     private static ClientLevel managerLevel;
     private static boolean listening;
@@ -53,6 +58,7 @@ public final class FtbMarkerManager {
             return;
         }
         trackedMarkers.clear();
+        ownedIcons.clear();
         manager = available;
         managerLevel = level;
         RaidMarkerLifecycle.markerApiReady();
@@ -60,6 +66,7 @@ public final class FtbMarkerManager {
 
     public static void levelChanged(ClientLevel level) {
         trackedMarkers.clear();
+        ownedIcons.clear();
         if (managerLevel != level) {
             manager = null;
             managerLevel = null;
@@ -68,6 +75,10 @@ public final class FtbMarkerManager {
 
     public static boolean isReady() {
         return manager != null && managerLevel != null && Minecraft.getInstance().level == managerLevel;
+    }
+
+    public static boolean isRaidIcon(Object icon) {
+        return ownedIcons.contains(icon);
     }
 
     public static boolean isRegistered(BlockPos pos) {
@@ -100,6 +111,8 @@ public final class FtbMarkerManager {
         waypoint.setColor(holder.raidType().getColor() & 0xFFFFFF);
         hideWorldHud(waypoint);
         trackedMarkers.put(pos.immutable(), new Marker(manager, waypoint));
+        ownedIcons.add(waypoint.getMapIcon());
+        LargeMapScreen.refreshIconsIfOpen();
         return true;
     }
 
@@ -108,9 +121,11 @@ public final class FtbMarkerManager {
         if (marker == null) {
             return;
         }
+        ownedIcons.remove(marker.waypoint().getMapIcon());
         if (marker.manager().getAllWaypoints().stream().anyMatch(existing -> existing == marker.waypoint())) {
             marker.manager().removeWaypoint(marker.waypoint());
         }
+        LargeMapScreen.refreshIconsIfOpen();
     }
 
     private static void hideWorldHud(Waypoint waypoint) {

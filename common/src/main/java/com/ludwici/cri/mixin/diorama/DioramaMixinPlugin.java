@@ -20,6 +20,14 @@ public final class DioramaMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (mixinClassName.endsWith(".FtbWaypointMapIconMixin")) {
+            try {
+                MixinService.getService().getBytecodeProvider().getClassNode(targetClassName);
+                return true;
+            } catch (ClassNotFoundException | IOException | LinkageError e) {
+                return false;
+            }
+        }
         if (!mixinClassName.endsWith(".DioramaWaypointStoreModernMixin")) {
             return true;
         }

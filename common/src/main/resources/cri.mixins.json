@@ -22,7 +22,8 @@
     "diorama.DioramaSmartRotomMapLabelsMixin",
     "diorama.DioramaWaypointHudMixin",
     "diorama.DioramaMapScreenMixin",
-    "diorama.SmartRotomCompactWaypointHudMixin"
+    "diorama.SmartRotomCompactWaypointHudMixin",
+    "ftb.FtbWaypointMapIconMixin"
   ],
   "mixins": [
     "InventoryServerAccessMixin"

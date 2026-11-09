@@ -4,6 +4,7 @@
 - Added support for identifying Raid Adventures on map markers.
 - Added localized Adventure labels, Pokémon names, raid types, and map tooltips.
 - Added waypoint integration for FTB Chunks 2101.1.10+.
+- Fixed FTB Chunks raid markers missing from the full-screen map.
 - Added translations for 16 additional languages.
 - Updated required dependencies to include Asymmetric Battles API 1.4.0.
 
