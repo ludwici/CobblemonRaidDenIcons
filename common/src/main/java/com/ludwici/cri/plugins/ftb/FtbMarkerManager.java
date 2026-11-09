@@ -8,7 +8,6 @@ import com.necro.raid.dens.common.client.ClientRaidRegistry;
 import dev.ftb.mods.ftbchunks.api.client.event.WaypointManagerEvent;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.Waypoint;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.WaypointManager;
-import dev.ftb.mods.ftbchunks.client.gui.LargeMapScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -112,7 +111,7 @@ public final class FtbMarkerManager {
         hideWorldHud(waypoint);
         trackedMarkers.put(pos.immutable(), new Marker(manager, waypoint));
         ownedIcons.add(waypoint.getMapIcon());
-        LargeMapScreen.refreshIconsIfOpen();
+        refreshLargeMap();
         return true;
     }
 
@@ -125,7 +124,16 @@ public final class FtbMarkerManager {
         if (marker.manager().getAllWaypoints().stream().anyMatch(existing -> existing == marker.waypoint())) {
             marker.manager().removeWaypoint(marker.waypoint());
         }
-        LargeMapScreen.refreshIconsIfOpen();
+        refreshLargeMap();
+    }
+
+    private static void refreshLargeMap() {
+        try {
+            Class<?> mapClass = Class.forName("dev.ftb.mods.ftbchunks.client.gui.LargeMapScreen");
+            mapClass.getMethod("refreshIconsIfOpen").invoke(null);
+        } catch (ReflectiveOperationException | LinkageError e) {
+            LOGGER.debug("FTB Chunks large map refresh is unavailable", e);
+        }
     }
 
     private static void hideWorldHud(Waypoint waypoint) {
