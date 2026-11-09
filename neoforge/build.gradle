@@ -28,7 +28,6 @@ dependencies {
     modImplementation "software.bernie.geckolib:geckolib-neoforge-${rootProject.geckolib_version}"
     include(modApi "me.shedaniel.cloth:cloth-config-neoforge:$rootProject.cloth_config_version")
     modImplementation "curse.maven:cobblemonraiddens-1349231:${rootProject.raiddens_neoforge_file}"
-    modImplementation "com.necro.asymmetric.battles:asymmetricbattles-neoforge:${rootProject.asymmetricbattles_version}"
 
     modCompileOnlyApi "info.journeymap:journeymap-api-neoforge:${rootProject.journeymap_api_version}"
     modCompileOnlyApi "xaero.map:xaeroworldmap-neoforge-${rootProject.xaero_map_version}"
