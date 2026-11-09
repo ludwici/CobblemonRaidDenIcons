@@ -5,7 +5,7 @@
   "cri.marker.adventure": "Macera: %s",
   "cri.marker.title": "%s (%s)",
   "cri.marker.detailed": "%s (%s, %s)",
-  "text.autoconfig.cri.option.dioramaIconStyle": "Diorama Simge Stili",
-  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Klasik baskın simgeleri",
-  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Pokémon tür simgeleri"
+  "text.autoconfig.cri.option.dioramaIconStyle": "Simge Stili",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Varsayılan",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Tür simgeleri"
 }
