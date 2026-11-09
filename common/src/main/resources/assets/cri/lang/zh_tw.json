@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "太晶圖示大小",
   "cri.marker.adventure": "冒險：%s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Diorama 圖示樣式",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "經典團體戰圖示",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "寶可夢屬性圖示"
 }

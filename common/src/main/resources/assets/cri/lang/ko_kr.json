@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "테라스탈 아이콘 크기",
   "cri.marker.adventure": "모험: %s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Diorama 아이콘 스타일",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "기본 레이드 아이콘",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "포켓몬 타입 아이콘"
 }
