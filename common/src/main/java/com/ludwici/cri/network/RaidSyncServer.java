@@ -31,7 +31,7 @@ public final class RaidSyncServer {
                 } catch (MatchException ignored) {
                     stars = "";
                 }
-                reply.accept(new RaidBlockSpawnS2CPayload(pos, new RaidBossHolder(boss.getId(), boss.getType(), stars)));
+                reply.accept(new RaidBlockSpawnS2CPayload(pos, new RaidBossHolder(boss.getId(), boss.getType(), stars, boss.isAdventure())));
                 return;
             }
             if (blockEntity.getRaidBossLocation() != null) {

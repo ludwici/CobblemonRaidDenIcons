@@ -262,7 +262,7 @@ public final class RaidMarkerLifecycle {
             } catch (MatchException ignored) {
                 stars = "";
             }
-            holder = new RaidBossHolder(boss.getId(), boss.getType(), stars);
+            holder = new RaidBossHolder(boss.getId(), boss.getType(), stars, boss.isAdventure());
         }
         if (holder.equals(entry.active)) {
             boolean xaeroReady = ModCompat.JOURNEYMAP_LOADED || !ModCompat.XAERO_WORLD_MAP_LOADED || !XaeroMarkerManager.isReady() || XaeroMarkerManager.isRegistered(pos);

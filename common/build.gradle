@@ -7,6 +7,7 @@ dependencies {
     modImplementation "com.cobblemon:mod:${rootProject.cobblemon_version}"
     modCompileOnly "dev.architectury:architectury:${rootProject.architectury_api_version}"
     modCompileOnly "curse.maven:cobblemonraiddens-1349231:${rootProject.raiddens_fabric_file}"
+    modCompileOnly "com.necro.asymmetric.battles:asymmetricbattles-common:${rootProject.asymmetricbattles_version}"
     modImplementation "software.bernie.geckolib:geckolib-common-$rootProject.geckolib_version"
     modCompileOnlyApi "info.journeymap:journeymap-api-fabric:${rootProject.journeymap_api_version}"
     modCompileOnlyApi "xaero.map:xaeroworldmap-fabric-${rootProject.xaero_map_version}"

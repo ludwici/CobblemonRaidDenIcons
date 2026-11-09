@@ -82,7 +82,7 @@ public class JourneyMarkerManager {
 
         MarkerOverlay marker = new MarkerOverlay(MODID, pos, typeIcon);
         marker.setDimension(world.dimension());
-        marker.setTitle(String.format("%s (%s)", boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars()));
+        marker.setTitle(String.format("%s (%s)", holder.adventure() ? "Adventure: " + boss.getDisplaySpecies().getTranslatedName().getString() : boss.getDisplaySpecies().getTranslatedName().getString(), holder.stars()));
         try {
             jmApi.show(marker);
             trackedMarkers.put(posStr, marker);

@@ -2,7 +2,7 @@ name: Build CRDI
 
 on:
   push:
-    branches: [main]
+    branches: [main, raiddens-0.14.1]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
-          name: cri-${{ matrix.loader }}-1.10.1
-          path: ${{ matrix.loader }}/build/libs/cri-${{ matrix.loader }}-1.10.1.jar
+          name: cri-${{ matrix.loader }}-1.11.0
+          path: ${{ matrix.loader }}/build/libs/cri-${{ matrix.loader }}-1.11.0.jar
           if-no-files-found: error
           retention-days: 30
