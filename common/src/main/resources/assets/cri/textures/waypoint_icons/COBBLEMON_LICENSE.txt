@@ -1,0 +1,11 @@
+Generated Pokémon type icons: type_0.png through type_17.png
+
+These files are cropped automatically at build time from Cobblemon's
+assets/cobblemon/textures/gui/types.png resource.
+
+Source: https://gitlab.com/cable-mc/cobblemon
+License for these generated type icon assets: Mozilla Public License 2.0
+https://www.mozilla.org/en-US/MPL/2.0/
+
+Cobblemon and its artwork are by the Cobblemon contributors.
+The original raid pin artwork and other CRDI code and assets are separate.
