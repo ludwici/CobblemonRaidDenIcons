@@ -1,22 +1,7 @@
 # 1.11.0
 
-- Added compatibility with Cobblemon Raid Dens 0.14.1.
-- Added support for identifying Raid Adventures on map markers.
-- Added localized Adventure labels, Pokémon names, raid types, and map tooltips.
-- Added waypoint integration for FTB Chunks 2101.1.10+.
-- Fixed FTB Chunks raid markers missing from the full-screen map.
-- Added configurable Diorama raid icon styles: classic markers or Pokémon type icons.
-- Added an independent FTB Chunks icon style setting with Pokémon type icons on the minimap and world map.
-- Hid config section headers for map mods that are not installed.
-- Changed the icon style selector to a cycling button and expanded Russian raid type names.
-- Added translations for 16 additional languages.
-- Updated required dependencies to include Asymmetric Battles API 1.4.0.
-
-# 1.10.1
-
-- Fixed Smart Rotom compatibility.
-
-## Compatibility
-
-- CRDI 1.11.0+ supports Cobblemon Raid Dens 0.14.x.
-- Use CRDI 1.10.x for older Cobblemon Raid Dens versions.
+- Updated compatibility with Cobblemon Raid Dens 0.14.1 and Asymmetric Battles API 1.4.0+.
+- Added support for Raid Adventure markers on supported maps.
+- Added FTB Chunks 2101.1.10+ integration for the minimap and full-screen map.
+- Added configurable raid icon styles for Diorama and FTB Chunks: classic icons or Pokémon type icons.
+- Localized raid marker labels, Pokémon names, types, and tooltips, with support for 18 languages.
