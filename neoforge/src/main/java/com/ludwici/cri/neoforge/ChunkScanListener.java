@@ -44,7 +44,7 @@ public class ChunkScanListener {
                     } catch (MatchException e) {
                         stars = "";
                     }
-                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars);
+                    RaidBossHolder holder = new RaidBossHolder(rb.getId(), rb.getType(), stars, rb.isAdventure());
                     RaidBlockSpawnS2CPayload payload = new RaidBlockSpawnS2CPayload(blockPos, holder);
                     ChunkPos chunkPos = new ChunkPos(blockPos);
                     PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, chunkPos, payload);
