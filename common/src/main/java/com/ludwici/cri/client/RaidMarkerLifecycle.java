@@ -171,6 +171,28 @@ public final class RaidMarkerLifecycle {
         });
     }
 
+    public static void refreshLocalizedMarkers() {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!minecraft.isSameThread()) {
+            minecraft.execute(RaidMarkerLifecycle::refreshLocalizedMarkers);
+            return;
+        }
+        ClientLevel level = minecraft.level;
+        if (level == null || trackedLevel != level || !serverAccess) {
+            return;
+        }
+        for (Map.Entry<BlockPos, MarkerEntry> tracked : entries.entrySet()) {
+            MarkerEntry entry = tracked.getValue();
+            if (entry.active == null) {
+                continue;
+            }
+            BlockPos pos = tracked.getKey();
+            MarkerDispatcher.unregister(pos);
+            entry.active = null;
+            update(level, pos, entry);
+        }
+    }
+
     public static void untrack(ClientLevel level, BlockPos pos) {
         if (level == null || trackedLevel != level) {
             return;
