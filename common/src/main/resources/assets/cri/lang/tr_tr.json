@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.cri.title": "Cobblemon Raid Dens Icons",
+  "text.autoconfig.cri.option.iconSize": "Simge Boyutu",
+  "text.autoconfig.cri.option.teraIconSize": "Tera Simge Boyutu",
+  "cri.marker.adventure": "Macera: %s",
+  "cri.marker.title": "%s (%s)",
+  "cri.marker.detailed": "%s (%s, %s)"
+}

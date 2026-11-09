@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.cri.title": "Cobblemon Raid Dens Icons",
+  "text.autoconfig.cri.option.iconSize": "Velikost ikon",
+  "text.autoconfig.cri.option.teraIconSize": "Velikost Tera ikon",
+  "cri.marker.adventure": "Dobrodružství: %s",
+  "cri.marker.title": "%s (%s)",
+  "cri.marker.detailed": "%s (%s, %s)"
+}

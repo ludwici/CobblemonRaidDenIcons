@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.cri.title": "Cobblemon Raid Dens Icons",
+  "text.autoconfig.cri.option.iconSize": "アイコンのサイズ",
+  "text.autoconfig.cri.option.teraIconSize": "テラスタルアイコンのサイズ",
+  "cri.marker.adventure": "冒険: %s",
+  "cri.marker.title": "%s (%s)",
+  "cri.marker.detailed": "%s (%s, %s)"
+}
