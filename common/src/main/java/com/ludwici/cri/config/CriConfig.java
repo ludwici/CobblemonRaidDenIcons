@@ -28,7 +28,7 @@ public final class CriConfig {
         return teraIconSize.getAsInt();
     }
 
-    public static void setMapIconStyleSupplier(Supplier<MapIconStyle> supplier) {
+    public static void setDioramaIconStyleSupplier(Supplier<MapIconStyle> supplier) {
         dioramaIconStyle = supplier;
     }
 

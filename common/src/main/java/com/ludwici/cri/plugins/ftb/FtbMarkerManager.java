@@ -84,7 +84,7 @@ public final class FtbMarkerManager {
     }
 
     public static boolean isRaidIcon(Object icon) {
-        return ownedIcons.contains(icon);
+        return ownedIcons.containsKey(icon);
     }
 
     public static boolean drawRaidTypeIcon(Object icon, MapType mapType, GuiGraphics graphics, int x, int y, int width, int height, int alpha) {
