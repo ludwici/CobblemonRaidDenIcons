@@ -2,6 +2,15 @@ package com.ludwici.cri.plugins.ftb;
 
 import com.ludwici.cri.client.RaidMarkerLifecycle;
 import com.ludwici.cri.client.RaidMarkerTexts;
+import com.ludwici.cri.ModCompat;
+import com.ludwici.cri.config.CriConfig;
+import com.ludwici.cri.config.MapIconStyle;
+import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.types.ElementalTypes;
+import com.necro.raid.dens.common.data.raid.RaidType;
+import dev.ftb.mods.ftbchunks.api.client.icon.MapType;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
 import com.necro.raid.dens.common.client.ClientRaidRegistry;
@@ -14,17 +23,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static com.ludwici.cri.CobblemonRaidDenIcons.LOGGER;
 
 public final class FtbMarkerManager {
     private static final Map<BlockPos, Marker> trackedMarkers = new HashMap<>();
-    private static final Set<Object> ownedIcons = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Map<Object, RaidIcon> ownedIcons = new IdentityHashMap<>();
     private static WaypointManager manager;
     private static ClientLevel managerLevel;
     private static boolean listening;
@@ -80,6 +87,44 @@ public final class FtbMarkerManager {
         return ownedIcons.contains(icon);
     }
 
+    public static boolean drawRaidTypeIcon(Object icon, MapType mapType, GuiGraphics graphics, int x, int y, int width, int height, int alpha) {
+        if (mapType.isWorldIcon() || CriConfig.ftbIconStyle() != MapIconStyle.TYPE_ICONS || width <= 0 || height <= 0) {
+            return false;
+        }
+        RaidIcon data = ownedIcons.get(icon);
+        if (data == null) {
+            return false;
+        }
+
+        ResourceLocation texture;
+        int sourceSize;
+        int u = 0;
+        if (data.tera()) {
+            texture = ResourceLocation.fromNamespaceAndPath("mega_showdown", "textures/gui/summary/tera_types/" + data.type().getSerializedName() + ".png");
+            sourceSize = 32;
+        } else if (data.type() != RaidType.STELLAR && data.type() != RaidType.NONE) {
+            texture = ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "textures/gui/types.png");
+            sourceSize = 36;
+            u = sourceSize * ElementalTypes.get(data.type().name()).getTextureXMultiplier();
+        } else {
+            return false;
+        }
+
+        graphics.setColor(1.0F, 1.0F, 1.0F, alpha / 255.0F);
+        try {
+            graphics.blit(texture, x, y, width, height, (float) u, 0.0F, sourceSize, sourceSize, data.tera() ? sourceSize : 648, sourceSize);
+        } finally {
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+        return true;
+    }
+
+    public static void refreshIconStyle() {
+        if (isReady()) {
+            refreshLargeMap();
+        }
+    }
+
     public static boolean isRegistered(BlockPos pos) {
         Marker marker = trackedMarkers.get(pos);
         return marker != null && marker.manager() == manager && manager != null && manager.getAllWaypoints().stream().anyMatch(waypoint -> waypoint == marker.waypoint());
@@ -110,7 +155,8 @@ public final class FtbMarkerManager {
         waypoint.setColor(holder.raidType().getColor() & 0xFFFFFF);
         hideWorldHud(waypoint);
         trackedMarkers.put(pos.immutable(), new Marker(manager, waypoint));
-        ownedIcons.add(waypoint.getMapIcon());
+        boolean tera = ("tera".equalsIgnoreCase(boss.getFeature()) || holder.raidType() == RaidType.STELLAR) && ModCompat.MEGA_SHOWDOWN_LOADED;
+        ownedIcons.put(waypoint.getMapIcon(), new RaidIcon(holder.raidType(), tera));
         refreshLargeMap();
         return true;
     }
@@ -148,4 +194,6 @@ public final class FtbMarkerManager {
     }
 
     private record Marker(WaypointManager manager, Waypoint waypoint) {}
+
+    private record RaidIcon(RaidType type, boolean tera) {}
 }

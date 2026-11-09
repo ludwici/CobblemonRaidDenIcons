@@ -6,7 +6,8 @@ import java.util.function.Supplier;
 public final class CriConfig {
     private static IntSupplier iconSize = () -> ConfigConstants.DEFAULT_ICON_SIZE;
     private static IntSupplier teraIconSize = () -> ConfigConstants.DEFAULT_TERA_ICON_SIZE;
-    private static Supplier<DioramaIconStyle> dioramaIconStyle = () -> DioramaIconStyle.DEFAULT;
+    private static Supplier<MapIconStyle> dioramaIconStyle = () -> MapIconStyle.DEFAULT;
+    private static Supplier<MapIconStyle> ftbIconStyle = () -> MapIconStyle.DEFAULT;
 
     private CriConfig() {
     }
@@ -27,12 +28,21 @@ public final class CriConfig {
         return teraIconSize.getAsInt();
     }
 
-    public static void setDioramaIconStyleSupplier(Supplier<DioramaIconStyle> supplier) {
+    public static void setMapIconStyleSupplier(Supplier<MapIconStyle> supplier) {
         dioramaIconStyle = supplier;
     }
 
-    public static DioramaIconStyle dioramaIconStyle() {
-        DioramaIconStyle style = dioramaIconStyle.get();
-        return style == null ? DioramaIconStyle.DEFAULT : style;
+    public static MapIconStyle dioramaIconStyle() {
+        MapIconStyle style = dioramaIconStyle.get();
+        return style == null ? MapIconStyle.DEFAULT : style;
+    }
+
+    public static void setFtbIconStyleSupplier(Supplier<MapIconStyle> supplier) {
+        ftbIconStyle = supplier;
+    }
+
+    public static MapIconStyle ftbIconStyle() {
+        MapIconStyle style = ftbIconStyle.get();
+        return style == null ? MapIconStyle.DEFAULT : style;
     }
 }

@@ -3,7 +3,7 @@ package com.ludwici.cri.plugins.diorama;
 import com.ludwici.cri.client.RaidMarkerTexts;
 import com.ludwici.cri.ModCompat;
 import com.ludwici.cri.config.CriConfig;
-import com.ludwici.cri.config.DioramaIconStyle;
+import com.ludwici.cri.config.MapIconStyle;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.ludwici.cri.network.RaidBossHolder;
 import com.necro.raid.dens.common.blocks.entity.RaidCrystalBlockEntity;
@@ -187,7 +187,7 @@ public final class DioramaMarkerManager {
 
     private static String iconId(RaidBossHolder holder, boolean tera) {
         RaidType type = holder.raidType();
-        if (CriConfig.dioramaIconStyle() == DioramaIconStyle.TYPE_ICONS && type != RaidType.STELLAR && type != RaidType.NONE) {
+        if (CriConfig.dioramaIconStyle() == MapIconStyle.TYPE_ICONS && type != RaidType.STELLAR && type != RaidType.NONE) {
             return "cri:type_" + ElementalTypes.get(type.name()).getTextureXMultiplier();
         }
         return tera ? "cri:tera_raid" : "cri:raid_den";
