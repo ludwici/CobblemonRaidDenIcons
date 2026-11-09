@@ -27,7 +27,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Build JAR
         run: ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace
-      - name: Validate CurseForge publication (dry run only)
+      - name: Validate CurseForge and Modrinth publication (dry run only)
         run: ./gradlew :${{ matrix.loader }}:publishMods -PpublishDryRun=true --no-daemon
       - name: Upload JAR
         uses: actions/upload-artifact@v4
