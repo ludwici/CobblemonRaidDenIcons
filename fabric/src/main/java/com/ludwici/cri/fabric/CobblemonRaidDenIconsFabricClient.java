@@ -15,11 +15,15 @@ import com.ludwici.cri.plugins.diorama.DioramaMarkerManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class CobblemonRaidDenIconsFabricClient implements ClientModInitializer {
@@ -64,6 +68,12 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
                     field -> field.getName().equals("ftbIconStyle")
             );
         }
+        if (ModCompat.DIORAMA_LOADED) {
+            registerCategoryHeader("dioramaIconStyle");
+        }
+        if (ModCompat.FTB_CHUNKS_LOADED) {
+            registerCategoryHeader("ftbIconStyle");
+        }
         CriConfig.setIconSizeSupplier(() -> ModConfig.get().iconSize);
         CriConfig.setTeraIconSizeSupplier(() -> ModConfig.get().teraIconSize);
         CriConfig.setDioramaIconStyleSupplier(() -> ModConfig.get().dioramaIconStyle);
@@ -80,6 +90,18 @@ public final class CobblemonRaidDenIconsFabricClient implements ClientModInitial
             }
             return InteractionResult.PASS;
         });
+    }
+
+    private static void registerCategoryHeader(String fieldName) {
+        AutoConfig.getGuiRegistry(ModConfig.class).registerPredicateTransformer(
+                (entries, i18n, field, config, defaults, registry) -> {
+                    List<AbstractConfigListEntry> result = new ArrayList<>(entries.size() + 1);
+                    result.add(ConfigEntryBuilder.create().startTextDescription(Component.translatable(i18n + ".@PrefixText")).build());
+                    result.addAll(entries);
+                    return result;
+                },
+                field -> field.getName().equals(fieldName)
+        );
     }
 
     public static void registerClientNetwork() {

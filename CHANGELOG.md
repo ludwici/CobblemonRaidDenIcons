@@ -7,6 +7,7 @@
 - Fixed FTB Chunks raid markers missing from the full-screen map.
 - Added configurable Diorama raid icon styles: classic markers or Pokémon type icons.
 - Added an independent FTB Chunks icon style setting with Pokémon type icons on the minimap and world map.
+- Hid config section headers for map mods that are not installed.
 - Changed the icon style selector to a cycling button and expanded Russian raid type names.
 - Added translations for 16 additional languages.
 - Updated required dependencies to include Asymmetric Battles API 1.4.0.
