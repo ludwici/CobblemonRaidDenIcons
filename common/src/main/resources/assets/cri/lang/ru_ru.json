@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "Размер Tera-иконок",
   "cri.marker.adventure": "Приключение: %s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Стиль иконок Diorama",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Обычные иконки рейдов",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Иконки типов покемонов"
 }

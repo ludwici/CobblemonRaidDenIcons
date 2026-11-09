@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "Tamanho dos ícones Tera",
   "cri.marker.adventure": "Aventura: %s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Estilo dos ícones do Diorama",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Ícones de reide clássicos",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Ícones dos tipos Pokémon"
 }

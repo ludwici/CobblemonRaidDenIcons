@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "Größe der Tera-Symbole",
   "cri.marker.adventure": "Abenteuer: %s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Diorama-Symbolstil",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Standard-Raid-Symbole",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Pokémon-Typsymbole"
 }

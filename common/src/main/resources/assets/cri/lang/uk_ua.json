@@ -4,5 +4,8 @@
   "text.autoconfig.cri.option.teraIconSize": "Розмір Тера-значків",
   "cri.marker.adventure": "Пригода: %s",
   "cri.marker.title": "%s (%s)",
-  "cri.marker.detailed": "%s (%s, %s)"
+  "cri.marker.detailed": "%s (%s, %s)",
+  "text.autoconfig.cri.option.dioramaIconStyle": "Стиль значків Diorama",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Звичайні значки рейдів",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Значки типів покемонів"
 }
