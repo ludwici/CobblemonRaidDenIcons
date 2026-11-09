@@ -5,7 +5,7 @@
   "cri.marker.adventure": "Dobrodružství: %s",
   "cri.marker.title": "%s (%s)",
   "cri.marker.detailed": "%s (%s, %s)",
-  "text.autoconfig.cri.option.dioramaIconStyle": "Styl ikon Diorama",
-  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Původní ikony raidů",
-  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Ikony typů Pokémonů"
+  "text.autoconfig.cri.option.dioramaIconStyle": "Styl ikon",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Výchozí",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Ikony typů"
 }

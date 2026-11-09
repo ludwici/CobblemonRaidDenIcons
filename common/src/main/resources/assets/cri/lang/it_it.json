@@ -5,7 +5,7 @@
   "cri.marker.adventure": "Avventura: %s",
   "cri.marker.title": "%s (%s)",
   "cri.marker.detailed": "%s (%s, %s)",
-  "text.autoconfig.cri.option.dioramaIconStyle": "Stile icone Diorama",
-  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Icone raid classiche",
-  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Icone dei tipi Pokémon"
+  "text.autoconfig.cri.option.dioramaIconStyle": "Stile icone",
+  "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Classiche",
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Icone dei tipi"
 }
