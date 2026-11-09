@@ -7,5 +7,10 @@
   "cri.marker.detailed": "%s (%s, %s)",
   "text.autoconfig.cri.option.dioramaIconStyle": "Stile icone",
   "text.autoconfig.cri.enum.dioramaIconStyle.DEFAULT": "Classiche",
-  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Icone dei tipi"
+  "text.autoconfig.cri.enum.dioramaIconStyle.TYPE_ICONS": "Icone dei tipi",
+  "text.autoconfig.cri.option.ftbIconStyle": "Stile icone",
+  "text.autoconfig.cri.enum.iconStyle.DEFAULT": "Classiche",
+  "text.autoconfig.cri.enum.iconStyle.TYPE_ICONS": "Icone dei tipi",
+  "text.autoconfig.cri.option.dioramaIconStyle.@PrefixText": "Diorama",
+  "text.autoconfig.cri.option.ftbIconStyle.@PrefixText": "FTB Chunks"
 }

@@ -27,5 +27,10 @@
   "cri.marker.type.poison": "Ядовитый",
   "cri.marker.type.dragon": "Драконий",
   "cri.marker.type.stellar": "Звёздный",
-  "cri.marker.type.none": "Без типа"
+  "cri.marker.type.none": "Без типа",
+  "text.autoconfig.cri.option.ftbIconStyle": "Стиль иконок",
+  "text.autoconfig.cri.enum.iconStyle.DEFAULT": "Обычные",
+  "text.autoconfig.cri.enum.iconStyle.TYPE_ICONS": "Иконки типов",
+  "text.autoconfig.cri.option.dioramaIconStyle.@PrefixText": "Diorama",
+  "text.autoconfig.cri.option.ftbIconStyle.@PrefixText": "FTB Chunks"
 }
